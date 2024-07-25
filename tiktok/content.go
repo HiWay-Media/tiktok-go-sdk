@@ -1,0 +1,50 @@
+package tiktok
+
+/*
+Query Creator Info
+To initiate a direct post to a creator's account, you must first use the Query Creator Info endpoint to get the target creator's latest information. For more information about why creator information is necessary, refer to these UX guidelines.
+
+Request:
+
+curl --location --request POST 'https://open.tiktokapis.com/v2/post/publish/creator_info/query/' \
+--header 'Authorization: Bearer act.example12345Example12345Example' \
+--header 'Content-Type: application/json; charset=UTF-8'
+*/
+func (o *tiktok) CreatorInfo() {
+    
+}
+
+/*
+Post a video
+To initiate video upload on TikTok's server, you must invoke the Direct Post Video endpoint. You have the following two options:
+
+If you have the video file locally, set the source parameter to FILE_UPLOAD in your request.
+If the video is hosted on a URL, set the source parameter to PULL_FROM_URL.
+Example
+Example using source=FILE_UPLOAD:
+
+Request:
+
+curl --location 'https://open.tiktokapis.com/v2/post/publish/video/init/' \
+--header 'Authorization: Bearer act.example12345Example12345Example' \
+--header 'Content-Type: application/json; charset=UTF-8' \
+--data-raw '{
+  "post_info": {
+    "title": "this will be a funny #cat video on your @tiktok #fyp",
+    "privacy_level": "MUTUAL_FOLLOW_FRIENDS",
+    "disable_duet": false,
+    "disable_comment": true,
+    "disable_stitch": false,
+    "video_cover_timestamp_ms": 1000
+  },
+  "source_info": {
+      "source": "FILE_UPLOAD",
+      "video_size": 50000123,
+      "chunk_size":  10000000,
+      "total_chunk_count": 5
+  }
+}'
+*/
+func (o *tiktok) PostVideo() {
+    
+}
