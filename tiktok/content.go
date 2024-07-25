@@ -10,8 +10,9 @@ curl --location --request POST 'https://open.tiktokapis.com/v2/post/publish/crea
 --header 'Authorization: Bearer act.example12345Example12345Example' \
 --header 'Content-Type: application/json; charset=UTF-8'
 */
-func (o *tiktok) CreatorInfo() {
+func (o *tiktok) CreatorInfo() (*QueryCreatorInfoResponse, error) {
     
+    return nil, nil
 }
 
 /*

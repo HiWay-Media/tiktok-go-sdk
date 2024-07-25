@@ -6,6 +6,7 @@ type ITiktok interface {
 	//
 	HealthCheck() error
 	IsDebug() bool
+	CreatorInfo() (*QueryCreatorInfoResponse, error)
 	//
 }
 
@@ -14,6 +15,7 @@ type tiktok struct {
 	debug        bool
 	clientKey    string
 	clientSecret string
+	accessToken string
 }
 
 func NewTikTok(clientKey, clientSecret string, isDebug bool) (ITiktok, error) {
@@ -26,4 +28,13 @@ func NewTikTok(clientKey, clientSecret string, isDebug bool) (ITiktok, error) {
 	o.restClient.SetDebug(isDebug)
 	o.restClient.SetBaseURL(BASE_URL)
 	return o, nil
+}
+
+
+func (o *tiktok) SetAccessToken(token string){
+	o.accessToken = token
+}
+
+func (o *tiktok) GetAccessToken() string {
+	return o.accessToken
 }
