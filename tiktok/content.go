@@ -1,5 +1,10 @@
 package tiktok
 
+import (
+	"encoding/json"
+	"fmt"
+)
+
 /*
 Query Creator Info
 To initiate a direct post to a creator's account, you must first use the Query Creator Info endpoint to get the target creator's latest information. For more information about why creator information is necessary, refer to these UX guidelines.
@@ -11,8 +16,19 @@ curl --location --request POST 'https://open.tiktokapis.com/v2/post/publish/crea
 --header 'Content-Type: application/json; charset=UTF-8'
 */
 func (o *tiktok) CreatorInfo() (*QueryCreatorInfoResponse, error) {
-    
-    return nil, nil
+	resp, err := o.restyPost("/", nil)
+	if err != nil {
+		return nil, err
+	}
+	if resp.IsError() {
+		return nil, fmt.Errorf("creator info error %s", resp.String())
+	}
+	var obj QueryCreatorInfoResponse
+	if err := json.Unmarshal(resp.Body(), &obj); err != nil {
+		return nil, err
+	}
+	o.debugPrint(obj)
+	return &obj, nil
 }
 
 /*
@@ -29,21 +45,22 @@ Request:
 curl --location 'https://open.tiktokapis.com/v2/post/publish/video/init/' \
 --header 'Authorization: Bearer act.example12345Example12345Example' \
 --header 'Content-Type: application/json; charset=UTF-8' \
---data-raw '{
-  "post_info": {
-    "title": "this will be a funny #cat video on your @tiktok #fyp",
-    "privacy_level": "MUTUAL_FOLLOW_FRIENDS",
-    "disable_duet": false,
-    "disable_comment": true,
-    "disable_stitch": false,
-    "video_cover_timestamp_ms": 1000
-  },
-  "source_info": {
-      "source": "PULL_FROM_URL",
-      "video_url": "https://example.verified.domain.com/example_video.mp4",
-  }
-}'
+
+	--data-raw '{
+	  "post_info": {
+	    "title": "this will be a funny #cat video on your @tiktok #fyp",
+	    "privacy_level": "MUTUAL_FOLLOW_FRIENDS",
+	    "disable_duet": false,
+	    "disable_comment": true,
+	    "disable_stitch": false,
+	    "video_cover_timestamp_ms": 1000
+	  },
+	  "source_info": {
+	      "source": "PULL_FROM_URL",
+	      "video_url": "https://example.verified.domain.com/example_video.mp4",
+	  }
+	}'
 */
 func (o *tiktok) PostVideo() {
-    
+
 }
