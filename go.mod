@@ -1,6 +1,6 @@
 module github.com/HiWay-Media/tiktok-go-sdk
 
-go 1.21.1
+go 1.19
 
 require (
 	github.com/go-resty/resty/v2 v2.13.1 // indirect

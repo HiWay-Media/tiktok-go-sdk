@@ -3,10 +3,10 @@
 TikTok Go SDK: A simple library for interacting with TikTok Developer API in Go. 
 
 
-## Overview
+## Overview
 The TikTok Go SDK provides a straightforward way to integrate TikTok's Developer API into your Go applications.
 
-## Installation
+## Installation
 To install the SDK, use go get:
 
 ```sh
