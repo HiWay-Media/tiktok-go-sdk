@@ -27,8 +27,8 @@ func TestNewTikTok(t *testing.T) {
 }
 
 func GetTikTok() (tiktok.ITiktok, error) {
-	clientKey := os.Getenv("clientKey")
-	clientSecret := os.Getenv("clientSecret")
+	clientKey := os.Getenv("CLIENT_KEY")
+	clientSecret := os.Getenv("CLIENT_SECRET")
 	//
 	c, err := tiktok.NewTikTok(clientKey, clientSecret, false)
 	if err != nil {
