@@ -3,6 +3,10 @@ package tiktok
 import "github.com/go-resty/resty/v2"
 
 type ITiktok interface {
+	//
+	HealthCheck() error
+	IsDebug() bool
+	//
 }
 
 type tiktok struct {
