@@ -24,6 +24,6 @@ func NewTikTok(clientKey, clientSecret string, isDebug bool) (ITiktok, error) {
 		debug:        isDebug,
 	}
 	o.restClient.SetDebug(isDebug)
-	c.restClient.SetBaseURL(BASE_URL)
+	o.restClient.SetBaseURL(BASE_URL)
 	return o, nil
 }
