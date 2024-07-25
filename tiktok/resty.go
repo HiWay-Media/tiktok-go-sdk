@@ -1,6 +1,10 @@
 package tiktok
 
+import (
+	"fmt"
 
+	"github.com/go-resty/resty/v2"
+)
 
 func (o *tiktok) HealthCheck() error {
 	resp, err := o.restyPost("/", nil)
