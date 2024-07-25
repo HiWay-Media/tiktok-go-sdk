@@ -18,7 +18,7 @@ func TestMain(m *testing.M) {
 	m.Run()
 }
 
-func TestNewCompress(t *testing.T) {
+func TestNewTikTok(t *testing.T) {
 	c, err := GetTikTok()
 	if err != nil {
 		t.Fatalf(err.Error())
