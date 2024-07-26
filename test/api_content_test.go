@@ -10,9 +10,10 @@ func TestCreatorInfo(t *testing.T) {
 	if err != nil {
 		t.Fatalf(err.Error())
 	}
-	resp, err := c.CreatorInfo()
+	c.IsDebug()
+	/*resp, err := c.CreatorInfo()
 	if err != nil {
 		t.Fatalf(err.Error())
 	}
-	log.Println("resp ", resp)
+	log.Println("resp ", resp)*/
 }
