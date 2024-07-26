@@ -9,7 +9,7 @@ type ITiktok interface {
 	//
 	HealthCheck() error
 	IsDebug() bool
-	CodeAuthUrl() 
+	CodeAuthUrl() string
 	CreatorInfo() (*QueryCreatorInfoResponse, error)
 	PostVideoInit(title, videoUrl string, privacyLevel string) (*PublishVideoResponse, error)
 	PublishVideo(publishId string) (*PublishStatusFetchResponse, error)
@@ -17,12 +17,12 @@ type ITiktok interface {
 }
 
 type tiktok struct {
-	restClient   	*resty.Client
-	debug        	bool
-	clientKey    	string
-	clientSecret 	string
-	accessToken 	string
-	OAuth2Config 	*oauth2.Config
+	restClient   *resty.Client
+	debug        bool
+	clientKey    string
+	clientSecret string
+	accessToken  string
+	OAuth2Config *oauth2.Config
 }
 
 func NewTikTok(clientKey, clientSecret string, isDebug bool) (ITiktok, error) {
@@ -32,22 +32,26 @@ func NewTikTok(clientKey, clientSecret string, isDebug bool) (ITiktok, error) {
 		restClient:   resty.New(),
 		debug:        isDebug,
 		OAuth2Config: &oauth2.Config{
-			ClientID:     	clientKey,
-			ClientSecret: 	clientSecret,
-			RedirectURL:  	"",
-			Scopes:       	[]string{"email"},
-			Endpoint: 		Endpoint,
+			ClientID:     clientKey,
+			ClientSecret: clientSecret,
+			RedirectURL:  "",
+			Scopes:       []string{"email"},
+			Endpoint:     Endpoint,
+		},
 	}
 	o.restClient.SetDebug(isDebug)
 	o.restClient.SetBaseURL(BASE_URL)
 	return o, nil
 }
 
-
-func (o *tiktok) SetAccessToken(token string){
+func (o *tiktok) SetAccessToken(token string) {
 	o.accessToken = token
 }
 
 func (o *tiktok) GetAccessToken() string {
 	return o.accessToken
+}
+
+func (o *tiktok) CodeAuthUrl() string {
+	return o.OAuth2Config.AuthCodeURL("state")
 }
