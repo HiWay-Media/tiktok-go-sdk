@@ -93,7 +93,22 @@ func (o *tiktok) PostVideoInit(title, videoUrl string, privacyLevel string) (*Pu
 	return &obj, nil
 }
 
+/*
+Get Post Status
+For content uploaded with the Content Posting API, two mechanisms are provided for developers to check the status of the post by the TikTok user:
 
+Fetch Status endpoint: An API endpoint for polling the status of the post.
+Content Posting webhooks: Events that notify your registered endpoint of the final outcome of the pos
+
+POST /v2/post/publish/status/fetch/ HTTP /1.1
+Host: open.tiktokapis.com
+Authorization: Bearer {{AccessToken}}
+Content-Type: application/json; charset=UTF-8
+
+{
+    "publish_id": {PUBLISH_ID}
+}
+*/
 func (o *tiktok) PublishVideo(publishId string) (*PublishStatusFetchResponse, error) {
 	request := &PublishStatusFetchRequest{
 		PublishId: publishId,
@@ -103,7 +118,7 @@ func (o *tiktok) PublishVideo(publishId string) (*PublishStatusFetchResponse, er
 		return nil, err
 	}
 	if resp.IsError() {
-		return nil, fmt.Errorf("post video init error %s", resp.String())
+		return nil, fmt.Errorf("publis video error %s", resp.String())
 	}
 	var obj PublishStatusFetchResponse
 	if err := json.Unmarshal(resp.Body(), &obj); err != nil {
