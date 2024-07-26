@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func Test(t *testing.T) {
+func TestCreatorInfo(t *testing.T) {
 	c, err := GetTikTok()
 	if err != nil {
 		t.Fatalf(err.Error())

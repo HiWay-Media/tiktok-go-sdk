@@ -1,11 +1,15 @@
 package tiktok
 
-import "github.com/go-resty/resty/v2"
+import (
+	"github.com/go-resty/resty/v2"
+	"golang.org/x/oauth2"
+)
 
 type ITiktok interface {
 	//
 	HealthCheck() error
 	IsDebug() bool
+	CodeAuthUrl() 
 	CreatorInfo() (*QueryCreatorInfoResponse, error)
 	PostVideoInit(title, videoUrl string, privacyLevel string) (*PublishVideoResponse, error)
 	PublishVideo(publishId string) (*PublishStatusFetchResponse, error)
@@ -18,6 +22,7 @@ type tiktok struct {
 	clientKey    	string
 	clientSecret 	string
 	accessToken 	string
+	OAuth2Config 	*oauth2.Config
 }
 
 func NewTikTok(clientKey, clientSecret string, isDebug bool) (ITiktok, error) {
@@ -26,6 +31,12 @@ func NewTikTok(clientKey, clientSecret string, isDebug bool) (ITiktok, error) {
 		clientSecret: clientSecret,
 		restClient:   resty.New(),
 		debug:        isDebug,
+		OAuth2Config: &oauth2.Config{
+			ClientID:     	clientKey,
+			ClientSecret: 	clientSecret,
+			RedirectURL:  	"",
+			Scopes:       	[]string{"email"},
+			Endpoint: 		Endpoint,
 	}
 	o.restClient.SetDebug(isDebug)
 	o.restClient.SetBaseURL(BASE_URL)
