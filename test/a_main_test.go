@@ -23,7 +23,7 @@ func TestNewTikTok(t *testing.T) {
 	if err != nil {
 		t.Fatalf(err.Error())
 	}
-	c.IsDebug()
+	log.Println(c.IsDebug())
 }
 
 func GetTikTok() (tiktok.ITiktok, error) {

@@ -13,11 +13,11 @@ type ITiktok interface {
 }
 
 type tiktok struct {
-	restClient   *resty.Client
-	debug        bool
-	clientKey    string
-	clientSecret string
-	accessToken string
+	restClient   	*resty.Client
+	debug        	bool
+	clientKey    	string
+	clientSecret 	string
+	accessToken 	string
 }
 
 func NewTikTok(clientKey, clientSecret string, isDebug bool) (ITiktok, error) {
