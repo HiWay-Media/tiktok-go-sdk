@@ -67,9 +67,9 @@ func (o *tiktok) PostVideoInit(title, videoUrl string, privacyLevel string) (*Pu
 			Title: title,
 		},
 		SourceInfo: SourceInfo{
-			Source: "PULL_FROM_URL",
-			VideoUrl: videoUrl
-		}
+			Source:   "PULL_FROM_URL",
+			VideoUrl: videoUrl,
+		},
 	}
 	resp, err := o.restyPost(API_POST_PUBLISH_VIDEO_INIT, request)
 	if err != nil {
