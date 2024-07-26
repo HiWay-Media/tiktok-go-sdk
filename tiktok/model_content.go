@@ -49,3 +49,15 @@ type PublishVideoResponse struct {
 type DataPublishVideo struct {
 	PubblishId    string   `json:"publish_id"`
 }
+
+type PublishStatusFetchResponse struct {
+   Data  DataQueryCreatorInfo  `json:"data"`
+   Error ErrorObject `json:"error"`
+}
+
+type PublishStatusFetch struct {
+	Status                     string   `json:"status"`
+	FailReason                 string   `json:"fail_reason"`
+	UploadedBytes              int64   `json:"uploaded_bytes"`
+	PublicalyAvailablePostId   []int64   `json:"publicaly_available_post_id"`
+}

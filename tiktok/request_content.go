@@ -27,10 +27,14 @@ type PostInfo struct {
     DisableDuet             bool `json:"disable_duet"`
     DisableComment          bool `json:"disable_comment"`
     DisableStitch           bool `json:"disable_stitch"`
-    VideoCoverTimestampMS   int `json:"video_cover_timestamp_ms"`
+    VideoCoverTimestampMS   int64 `json:"video_cover_timestamp_ms"`
 }
 
 type SourceInfo struct {
     Source      string `json:"source"`
     VideoUrl    string `json:"video_url"`
+}
+
+type PublishStatusFetchRequest struct {
+  PublishId string `json:"publish_id"`
 }

@@ -8,6 +8,7 @@ type ITiktok interface {
 	IsDebug() bool
 	CreatorInfo() (*QueryCreatorInfoResponse, error)
 	PostVideoInit(title, videoUrl string, privacyLevel string) (*PublishVideoResponse, error)
+	PublishVideo(publishId string) (*PublishStatusFetchResponse, error)
 	//
 }
 

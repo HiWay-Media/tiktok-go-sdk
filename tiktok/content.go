@@ -65,11 +65,13 @@ func (o *tiktok) PostVideoInit(title, videoUrl string, privacyLevel string) (*Pu
 	if !CheckPrivacyLevel(privacyLevel){
 		return nil, PrivacyLevelWrong
 	}
-
 	request := &PublishVideoRequest{
 		PostInfo: PostInfo{
 			Title: title,
 			PrivacyLevel: privacyLevel,
+			DisableDuet: false,
+			DisableComment: false,
+			DisableStitch: false,
 		},
 		SourceInfo: SourceInfo{
 			Source:   "PULL_FROM_URL",
@@ -84,6 +86,26 @@ func (o *tiktok) PostVideoInit(title, videoUrl string, privacyLevel string) (*Pu
 		return nil, fmt.Errorf("post video init error %s", resp.String())
 	}
 	var obj PublishVideoResponse
+	if err := json.Unmarshal(resp.Body(), &obj); err != nil {
+		return nil, err
+	}
+	o.debugPrint(obj)
+	return &obj, nil
+}
+
+
+func (o *tiktok) PublishVideo(publishId string) (*PublishStatusFetchResponse, error) {
+	request := &PublishStatusFetchRequest{
+		PublishId: publishId,
+	}
+	resp, err := o.restyPost(API_PUBLISH_STATUS_FETCH, request)
+	if err != nil {
+		return nil, err
+	}
+	if resp.IsError() {
+		return nil, fmt.Errorf("post video init error %s", resp.String())
+	}
+	var obj PublishStatusFetchResponse
 	if err := json.Unmarshal(resp.Body(), &obj); err != nil {
 		return nil, err
 	}
