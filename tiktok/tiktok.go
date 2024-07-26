@@ -53,5 +53,4 @@ func (o *tiktok) GetAccessToken() string {
 }
 
 func (o *tiktok) CodeAuthUrl() string {
-	return o.OAuth2Config.AuthCodeURL("state")
-}
+	return o.OAuth2Config.AuthCodeURL("state-token", oauth2.ApprovalForce)
