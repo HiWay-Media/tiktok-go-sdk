@@ -1,6 +1,7 @@
 package test
 
 import (
+	"log"
 	"os"
 	"testing"
 

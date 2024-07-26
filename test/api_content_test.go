@@ -1,10 +1,8 @@
 package test
 
 import (
-	"os"
+	"log"
 	"testing"
-
-	"github.com/HiWay-Media/tiktok-go-sdk/tiktok"
 )
 
 func Test(t *testing.T) {
@@ -12,7 +10,7 @@ func Test(t *testing.T) {
 	if err != nil {
 		t.Fatalf(err.Error())
 	}
-	resp , err := c.CreatorInfo()
+	resp, err := c.CreatorInfo()
 	if err != nil {
 		t.Fatalf(err.Error())
 	}
