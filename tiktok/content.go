@@ -62,9 +62,14 @@ curl --location 'https://open.tiktokapis.com/v2/post/publish/video/init/' \
 	}'
 */
 func (o *tiktok) PostVideoInit(title, videoUrl string, privacyLevel string) (*PublishVideoResponse, error) {
+	if !CheckPrivacyLevel(privacyLevel){
+		return nil, PrivacyLevelWrong
+	}
+
 	request := &PublishVideoRequest{
 		PostInfo: PostInfo{
 			Title: title,
+			PrivacyLevel: privacyLevel,
 		},
 		SourceInfo: SourceInfo{
 			Source:   "PULL_FROM_URL",
