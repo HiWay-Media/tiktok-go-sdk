@@ -127,3 +127,28 @@ func (o *tiktok) PublishVideo(publishId string) (*PublishStatusFetchResponse, er
 	o.debugPrint(obj)
 	return &obj, nil
 }
+
+
+/* Photo
+The /v2/post/publish/content/init/ endpoint allows you to post directly or upload photos to TikTok.
+
+curl --location 'https://open.tiktokapis.com/v2/post/publish/content/init/' \
+--header 'Authorization: Bearer act.example12345Example12345Example' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "post_info": {
+        "title": "funny cat",
+        "description": "this will be a #funny photomode on your @tiktok #fyp"
+    },
+    "source_info": {
+        "source": "PULL_FROM_URL",
+        "photo_cover_index": 1,
+        "photo_images": [
+            "https://tiktokcdn.com/obj/example-image-01.webp",
+            "https://tiktokcdn.com/obj/example-image-02.webp"
+        ]
+    },
+    "post_mode": "MEDIA_UPLOAD",
+    "media_type": "PHOTO"
+}'
+*/
