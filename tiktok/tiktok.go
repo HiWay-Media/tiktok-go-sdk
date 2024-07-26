@@ -7,6 +7,7 @@ type ITiktok interface {
 	HealthCheck() error
 	IsDebug() bool
 	CreatorInfo() (*QueryCreatorInfoResponse, error)
+	PostVideoInit(title, videoUrl string, privacyLevel string) (*PublishVideoResponse, error)
 	//
 }
 

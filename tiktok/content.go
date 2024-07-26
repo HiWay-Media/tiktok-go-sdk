@@ -16,7 +16,7 @@ curl --location --request POST 'https://open.tiktokapis.com/v2/post/publish/crea
 --header 'Content-Type: application/json; charset=UTF-8'
 */
 func (o *tiktok) CreatorInfo() (*QueryCreatorInfoResponse, error) {
-	resp, err := o.restyPost("/", nil)
+	resp, err := o.restyPost(API_QUERY_CREATOR_INFO, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -61,6 +61,27 @@ curl --location 'https://open.tiktokapis.com/v2/post/publish/video/init/' \
 	  }
 	}'
 */
-func (o *tiktok) PostVideo() {
-
+func (o *tiktok) PostVideoInit(title, videoUrl string, privacyLevel string) (*PublishVideoResponse, error) {
+	request := &PublishVideoRequest{
+		PostInfo: PostInfo{
+			Title: title,
+		},
+		SourceInfo: SourceInfo{
+			Source: "PULL_FROM_URL",
+			VideoUrl: videoUrl
+		}
+	}
+	resp, err := o.restyPost(API_POST_PUBLISH_VIDEO_INIT, request)
+	if err != nil {
+		return nil, err
+	}
+	if resp.IsError() {
+		return nil, fmt.Errorf("post video init error %s", resp.String())
+	}
+	var obj PublishVideoResponse
+	if err := json.Unmarshal(resp.Body(), &obj); err != nil {
+		return nil, err
+	}
+	o.debugPrint(obj)
+	return &obj, nil
 }
