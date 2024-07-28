@@ -64,3 +64,6 @@ type PhotoSourceInfo struct {
     PhotoImages    []string `json:"photo_images"`
 }
 
+type VideoListRequest struct {
+  MaxCount int64 `json:"max_count"`
+}

@@ -189,3 +189,33 @@ func (o *tiktok) PostPhotoInit(title, description, privacyLevel string, photoUrl
 	o.debugPrint(obj)
 	return &obj, nil
 }
+
+
+/* List Videos
+The /v2/video/list/ endpoint can return a paginated list for the given user's public TikTok video posts, sorted by create_time in descending order.
+
+curl -L -X POST 'https://open.tiktokapis.com/v2/video/list/?fields=cover_image_url,id,title' \
+-H 'Authorization: Bearer act.example12345Example12345Example' \
+-H 'Content-Type: application/json' \
+--data-raw '{
+    "max_count": 20
+}'
+*/
+func (o *tiktok) GetVideoList(count int64) (*VideoListResponse, error) {
+	request := &VideoListRequest{
+		MaxCount: count,
+	}
+	resp, err := o.restyPost(API_VIDEO_LIST, request)
+	if err != nil {
+		return nil, err
+	}
+	if resp.IsError() {
+		return nil, fmt.Errorf("post video init error %s", resp.String())
+	}
+	var obj VideoListResponse
+	if err := json.Unmarshal(resp.Body(), &obj); err != nil {
+		return nil, err
+	}
+	o.debugPrint(obj)
+	return &obj, nil
+}

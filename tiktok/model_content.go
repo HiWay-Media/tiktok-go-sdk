@@ -55,3 +55,18 @@ type PublishStatusFetch struct {
 	UploadedBytes              int64   `json:"uploaded_bytes"`
 	PublicalyAvailablePostId   []int64   `json:"publicaly_available_post_id"`
 }
+
+type VideoListResponse struct {
+   Data  DataVideoList `json:"data"`
+	Error ErrorObject `json:"error"`
+}
+
+type DataVideoList struct {
+   Videos []Video `json:"videos"`
+}
+
+type Video struct {
+	ID                 string   `json:"id"`
+   Title                   string `json:"title"`
+	CoverImageUrl                     string   `json:"cover_image_url"`
+}
