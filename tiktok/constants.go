@@ -3,7 +3,7 @@ package tiktok
 import "fmt"
 
 const (
-	BASE_URL                    = "https://open.tiktokapis.com/"
+	BASE_URL                    = "https://open.tiktokapis.com"
 	QUERY_CREATOR_INFO          = "/v2/post/publish/creator_info/query"
 	POST_PUBLISH_VIDEO_INIT     = "/v2/post/publish/video/init"
     PUBLISH_STATUS_FETCH        = "/v2/post/publish/status/fetch/"
