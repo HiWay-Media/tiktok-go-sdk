@@ -205,7 +205,9 @@ func (o *tiktok) GetVideoList(count int64) (*VideoListResponse, error) {
 	request := &VideoListRequest{
 		MaxCount: count,
 	}
-	resp, err := o.restyPost(API_VIDEO_LIST, request)
+	resp, err := o.restyPostWithQueryParams(API_VIDEO_LIST, request, map[string]string{
+        "fields": "cover_image_url,id,title",
+	})
 	if err != nil {
 		return nil, err
 	}
