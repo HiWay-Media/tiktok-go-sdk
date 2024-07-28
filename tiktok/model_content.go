@@ -35,12 +35,6 @@ type DataQueryCreatorInfo struct {
 	StitchDisabled      bool     `json:"stitch_disabled"`
 }
 
-type ErrorObject struct {
-	Code    string `json:"code"`
-	Message string `json:"message"`
-	LogId   string `json:"log_id"`
-}
-
 type PublishVideoResponse struct {
    Data  DataPublishVideo `json:"data"`
 	Error ErrorObject `json:"error"`
