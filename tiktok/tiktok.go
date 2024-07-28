@@ -36,7 +36,7 @@ func NewTikTok(clientKey, clientSecret string, isDebug bool) (ITiktok, error) {
 			ClientID:     clientKey,
 			ClientSecret: clientSecret,
 			RedirectURL:  "",
-			Scopes:       []string{"email"},
+			Scopes:       []string{"user.info.basic", "video.list", },
 			Endpoint:     Endpoint,
 		},
 	}
