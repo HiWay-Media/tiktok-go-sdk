@@ -1,4 +1,6 @@
 # tiktok-go-sdk
+[![Go build](https://github.com/HiWay-Media/tiktok-go-sdk/actions/workflows/go-build.yml/badge.svg)](https://github.com/HiWay-Media/tiktok-go-sdk/actions/workflows/go-build.yml)
+[![Go test workflow](https://github.com/HiWay-Media/tiktok-go-sdk/actions/workflows/go-test.yml/badge.svg)](https://github.com/HiWay-Media/tiktok-go-sdk/actions/workflows/go-test.yml)
 
 TikTok Go SDK: A simple library for interacting with TikTok Developer API in Go. 
 
