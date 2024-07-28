@@ -13,6 +13,7 @@ type ITiktok interface {
 	CreatorInfo() (*QueryCreatorInfoResponse, error)
 	PostVideoInit(title, videoUrl string, privacyLevel string) (*PublishVideoResponse, error)
 	PublishVideo(publishId string) (*PublishStatusFetchResponse, error)
+	 PostPhotoInit(title, description, privacyLevel string, photoUrls []string, photoMode string) (*PublishStatusFetchResponse, error)
  	UserInfo() (*UserInfoResponse, error)
 	//
 }

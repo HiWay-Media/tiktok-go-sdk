@@ -16,6 +16,9 @@ package tiktok
   }
 }
 */
+/*type BasePostInfo struct {
+}*/
+
 type PublishVideoRequest struct {
     PostInfo PostInfo       `json:"post_info"`
     SourceInfo SourceInfo   `json:"source_info"`
@@ -38,3 +41,26 @@ type SourceInfo struct {
 type PublishStatusFetchRequest struct {
   PublishId string `json:"publish_id"`
 }
+
+
+type PublishPhotoRequest struct {
+    PostInfo      PostPhotoInfo     `json:"post_info"`
+    SourceInfo    PhotoSourceInfo    `json:"source_info"`
+    PostMode      string        `json:"post_mode"` //  DIRECT_POST | MEDIA_UPLAOD
+    MediaType     string        `json:"media_type"` // PHOTO
+}
+
+type PostPhotoInfo struct {
+  Title                   string `json:"title"`
+  Description             string `json:"description"`
+  PrivacyLevel            string `json:"privacy_level"`
+  DisableComment          bool `json:"disable_comment"`
+  AutoAddMusic            bool `json:"auto_add_music"`
+}
+
+type PhotoSourceInfo struct {
+    Source      string `json:"source"`
+    PhotoCoverIndex    int `json:"photo_cover_index"`
+    PhotoImages    []string `json:"photo_images"`
+}
+

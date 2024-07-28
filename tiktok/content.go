@@ -152,3 +152,40 @@ curl --location 'https://open.tiktokapis.com/v2/post/publish/content/init/' \
     "media_type": "PHOTO"
 }'
 */
+
+func (o *tiktok) PostPhotoInit(title, description, privacyLevel string, photoUrls []string, photoMode string) (*PublishStatusFetchResponse, error) { 
+	if !CheckPrivacyLevel(privacyLevel){
+		return nil, PrivacyLevelWrong
+	}
+	if !CheckPostMode(photoMode){
+		return nil, PhotoModeWrong
+	}
+	request := &PublishPhotoRequest{
+		PostInfo: PostPhotoInfo{
+			Title: title,
+			PrivacyLevel: privacyLevel,
+			DisableComment: false,
+			AutoAddMusic: true,
+		},
+		SourceInfo: PhotoSourceInfo{
+			Source:   "PULL_FROM_URL",
+			PhotoCoverIndex: 1,
+			PhotoImages: photoUrls,
+		},
+		PostMode: photoMode,
+		MediaType: "PHOTO",
+	}
+	resp, err := o.restyPost(POST_PUBLISH_CONTENT_INIT, request)
+	if err != nil {
+		return nil, err
+	}
+	if resp.IsError() {
+		return nil, fmt.Errorf("post video init error %s", resp.String())
+	}
+	var obj PublishStatusFetchResponse
+	if err := json.Unmarshal(resp.Body(), &obj); err != nil {
+		return nil, err
+	}
+	o.debugPrint(obj)
+	return &obj, nil
+}
