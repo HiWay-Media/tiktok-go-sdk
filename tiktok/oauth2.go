@@ -42,6 +42,5 @@ func  (o *tiktok) GetClientAccessTokenManagement() (*AccessTokenManagement, erro
 	return &obj, nil
 }
 
-}
 
 
