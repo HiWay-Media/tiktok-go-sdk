@@ -38,6 +38,19 @@ func (o *tiktok) restyPost(url string, body interface{}) (*resty.Response, error
 	return resp, nil
 }
 
+func (o *tiktok) restyPostFormUrlEncoded(url string, data map[string]string) (*resty.Response, error) {
+	resp, err := o.restClient.R().
+		SetHeader("Cache-Control", "no-cache").
+		SetHeader("Content-Type", "application/x-www-form-urlencoded").
+		SetFormData(data).
+		Post(url)
+
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
 func (o *tiktok) restyPostWithQueryParams(url string, body interface{},  queryParams map[string]string) (*resty.Response, error) {
 	resp, err := o.restClient.R().
 		SetHeader("Accept", "application/json").

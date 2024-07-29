@@ -10,6 +10,7 @@ type ITiktok interface {
 	HealthCheck() error
 	IsDebug() bool
 	CodeAuthUrl() string
+	GetClientAccessTokenManagement() (*AccessTokenManagement, error)
 	CreatorInfo() (*QueryCreatorInfoResponse, error)
 	PostVideoInit(title, videoUrl string, privacyLevel string) (*PublishVideoResponse, error)
 	PublishVideo(publishId string) (*PublishStatusFetchResponse, error)
