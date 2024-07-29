@@ -27,6 +27,20 @@ func TestNewTikTok(t *testing.T) {
 	log.Println(c.IsDebug())
 }
 
+func TestAuthCodeUrl(t *testing.T){
+	c, err := GetTikTok()
+	if err != nil {
+		t.Fatalf(err.Error())
+	}
+	resp, err := c.CodeAuthUrl()
+	if err != nil {
+		t.Fatalf(err.Error())
+	}
+	log.Println("resp ", resp)
+}
+
+
+
 func GetTikTok() (tiktok.ITiktok, error) {
 	clientKey := os.Getenv("CLIENT_KEY")
 	clientSecret := os.Getenv("CLIENT_SECRET")
@@ -37,3 +51,4 @@ func GetTikTok() (tiktok.ITiktok, error) {
 	}
 	return c, nil
 }
+

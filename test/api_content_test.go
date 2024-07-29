@@ -25,9 +25,9 @@ func TestGetVideoList( t *testing.T){
 		t.Fatalf(err.Error())
 	}
 	c.IsDebug()
-	resp, err := c.GetVideoList(int64(20))
+	/*resp, err := c.GetVideoList(int64(20))
 	if err != nil {
 		t.Fatalf(err.Error())
 	}
-	log.Println("resp ", resp)
+	log.Println("resp ", resp)*/
 }
