@@ -62,16 +62,16 @@ curl --location 'https://open.tiktokapis.com/v2/post/publish/video/init/' \
 	}'
 */
 func (o *tiktok) PostVideoInit(title, videoUrl string, privacyLevel string) (*PublishVideoResponse, error) {
-	if !CheckPrivacyLevel(privacyLevel){
+	if !CheckPrivacyLevel(privacyLevel) {
 		return nil, PrivacyLevelWrong
 	}
 	request := &PublishVideoRequest{
 		PostInfo: PostInfo{
-			Title: title,
-			PrivacyLevel: privacyLevel,
-			DisableDuet: false,
+			Title:          title,
+			PrivacyLevel:   privacyLevel,
+			DisableDuet:    false,
 			DisableComment: false,
-			DisableStitch: false,
+			DisableStitch:  false,
 		},
 		SourceInfo: SourceInfo{
 			Source:   "PULL_FROM_URL",
@@ -105,9 +105,9 @@ Host: open.tiktokapis.com
 Authorization: Bearer {{AccessToken}}
 Content-Type: application/json; charset=UTF-8
 
-{
-    "publish_id": {PUBLISH_ID}
-}
+	{
+	    "publish_id": {PUBLISH_ID}
+	}
 */
 func (o *tiktok) PublishVideo(publishId string) (*PublishStatusFetchResponse, error) {
 	request := &PublishStatusFetchRequest{
@@ -127,7 +127,6 @@ func (o *tiktok) PublishVideo(publishId string) (*PublishStatusFetchResponse, er
 	o.debugPrint(obj)
 	return &obj, nil
 }
-
 
 /* Photo
 The /v2/post/publish/content/init/ endpoint allows you to post directly or upload photos to TikTok.
@@ -153,26 +152,26 @@ curl --location 'https://open.tiktokapis.com/v2/post/publish/content/init/' \
 }'
 */
 
-func (o *tiktok) PostPhotoInit(title, description, privacyLevel string, photoUrls []string, photoMode string) (*PublishStatusFetchResponse, error) { 
-	if !CheckPrivacyLevel(privacyLevel){
+func (o *tiktok) PostPhotoInit(title, description, privacyLevel string, photoUrls []string, photoMode string) (*PublishStatusFetchResponse, error) {
+	if !CheckPrivacyLevel(privacyLevel) {
 		return nil, PrivacyLevelWrong
 	}
-	if !CheckPostMode(photoMode){
+	if !CheckPostMode(photoMode) {
 		return nil, PhotoModeWrong
 	}
 	request := &PublishPhotoRequest{
 		PostInfo: PostPhotoInfo{
-			Title: title,
-			PrivacyLevel: privacyLevel,
+			Title:          title,
+			PrivacyLevel:   privacyLevel,
 			DisableComment: false,
-			AutoAddMusic: true,
+			AutoAddMusic:   true,
 		},
 		SourceInfo: PhotoSourceInfo{
-			Source:   "PULL_FROM_URL",
+			Source:          "PULL_FROM_URL",
 			PhotoCoverIndex: 1,
-			PhotoImages: photoUrls,
+			PhotoImages:     photoUrls,
 		},
-		PostMode: photoMode,
+		PostMode:  photoMode,
 		MediaType: "PHOTO",
 	}
 	resp, err := o.restyPost(POST_PUBLISH_CONTENT_INIT, request)
@@ -190,23 +189,25 @@ func (o *tiktok) PostPhotoInit(title, description, privacyLevel string, photoUrl
 	return &obj, nil
 }
 
+/*
+	List Videos
 
-/* List Videos
 The /v2/video/list/ endpoint can return a paginated list for the given user's public TikTok video posts, sorted by create_time in descending order.
 
 curl -L -X POST 'https://open.tiktokapis.com/v2/video/list/?fields=cover_image_url,id,title' \
 -H 'Authorization: Bearer act.example12345Example12345Example' \
 -H 'Content-Type: application/json' \
---data-raw '{
-    "max_count": 20
-}'
+
+	--data-raw '{
+	    "max_count": 20
+	}'
 */
 func (o *tiktok) GetVideoList(count int64) (*VideoListResponse, error) {
 	request := &VideoListRequest{
 		MaxCount: count,
 	}
 	resp, err := o.restyPostWithQueryParams(API_VIDEO_LIST, request, map[string]string{
-        "fields": "cover_image_url,id,title",
+		"fields": "cover_image_url,id,title",
 	})
 	if err != nil {
 		return nil, err
