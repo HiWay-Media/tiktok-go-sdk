@@ -11,6 +11,7 @@ const (
     USER_INFO  			 		= "/v2/user/info/"
 	VIDEO_LIST 					= "/v2/video/list/"
 	RESEARCH_VIDEO_QUERY		= "/v2/research/video/query/"
+	RESEARCH_AD_QUERY			= "/v2/research/adlib/ad/query/"
 )
 
 var (
@@ -21,4 +22,5 @@ var (
 	API_USER_INFO   				= fmt.Sprintf("%s%s", BASE_URL, USER_INFO)
 	API_VIDEO_LIST   				= fmt.Sprintf("%s%s", BASE_URL, VIDEO_LIST)
 	API_RESEARCH_VIDEO_QUERY		= fmt.Sprintf("%s%s", BASE_URL, RESEARCH_VIDEO_QUERY)
+	API_RESEARCH_AD_QUERY			= fmt.Sprintf("%s%s", BASE_URL, RESEARCH_AD_QUERY)
 )
