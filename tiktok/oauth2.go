@@ -1,6 +1,11 @@
 package tiktok
 
-import "golang.org/x/oauth2"
+import (
+	"encoding/json"
+	"fmt"
+
+	"golang.org/x/oauth2"
+)
 
 // Endpoint is TikTok's OAuth 2.0 endpoint.
 var Endpoint = oauth2.Endpoint{
@@ -20,7 +25,7 @@ curl --location --request POST 'https://open.tiktokapis.com/v2/oauth/token/' \
 --data-urlencode 'client_secret=CLIENT_SECRET' \
 --data-urlencode 'grant_type=client_credentials'
 */
-func  (o *tiktok) GetClientAccessTokenManagement() (*AccessTokenManagement, error) {
+func (o *tiktok) GetClientAccessTokenManagement() (*AccessTokenManagement, error) {
 	data := map[string]string{}
 	data["client_key"] = o.clientKey
 	data["client_secret"] = o.clientSecret
@@ -41,6 +46,3 @@ func  (o *tiktok) GetClientAccessTokenManagement() (*AccessTokenManagement, erro
 	o.debugPrint(obj)
 	return &obj, nil
 }
-
-
-
