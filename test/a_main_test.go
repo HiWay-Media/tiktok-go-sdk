@@ -32,7 +32,7 @@ func TestAuthCodeUrl(t *testing.T){
 	if err != nil {
 		t.Fatalf(err.Error())
 	}
-	resp, err := c.CodeAuthUrl()
+	resp := c.CodeAuthUrl()
 	if err != nil {
 		t.Fatalf(err.Error())
 	}
