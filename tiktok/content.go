@@ -65,7 +65,6 @@ func (o *tiktok) PostVideoInit(title, videoUrl string, privacyLevel string) (*Pu
 	if !CheckPrivacyLevel(privacyLevel) {
 		return nil, PrivacyLevelWrong
 	}
-	//encodedVideoUrl := url.QueryEscape(videoUrl)
 	//
 	request := &PublishVideoRequest{
 		PostInfo: PostInfo{
