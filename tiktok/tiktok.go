@@ -39,8 +39,9 @@ func NewTikTok(clientKey, clientSecret string, isDebug bool) (ITiktok, error) {
 			ClientID:     clientKey,
 			ClientSecret: clientSecret,
 			RedirectURL:  "",
-			Scopes:       []string{"user.info.basic", "video.list", },
+			//Scopes:       []string{"user.info.basic", "video.list", },
 			Endpoint:     Endpoint,
+			// /[]string{"user.info.basic", "video.list", "video.publish", "video.delete", }
 		},
 	}
 	o.restClient.SetDebug(isDebug)
