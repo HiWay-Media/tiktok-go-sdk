@@ -25,12 +25,13 @@ type PublishVideoRequest struct {
 }
 
 type PostInfo struct { 
-    Title                   string `json:"title"`
-    PrivacyLevel            string `json:"privacy_level"`
-    DisableDuet             bool `json:"disable_duet"`
-    DisableComment          bool `json:"disable_comment"`
-    DisableStitch           bool `json:"disable_stitch"`
-    VideoCoverTimestampMS   int64 `json:"video_cover_timestamp_ms"`
+    Title                   string  `json:"title"`
+    Description             string  `json:"description"`
+    PrivacyLevel            string  `json:"privacy_level"`
+    DisableDuet             bool    `json:"disable_duet"`
+    DisableComment          bool    `json:"disable_comment"`
+    DisableStitch           bool    `json:"disable_stitch"`
+    VideoCoverTimestampMS   int64   `json:"video_cover_timestamp_ms"`
 }
 
 type SourceInfo struct {
