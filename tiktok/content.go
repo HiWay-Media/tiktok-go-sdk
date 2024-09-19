@@ -1,8 +1,6 @@
 package tiktok
 
 import (
-
-	"net/url"
 	"encoding/json"
 	"fmt"
 )
@@ -67,7 +65,7 @@ func (o *tiktok) PostVideoInit(title, videoUrl string, privacyLevel string) (*Pu
 	if !CheckPrivacyLevel(privacyLevel) {
 		return nil, PrivacyLevelWrong
 	}
-	encodedVideoUrl := url.QueryEscape(videoUrl)
+	//encodedVideoUrl := url.QueryEscape(videoUrl)
 	//
 	request := &PublishVideoRequest{
 		PostInfo: PostInfo{
@@ -79,7 +77,7 @@ func (o *tiktok) PostVideoInit(title, videoUrl string, privacyLevel string) (*Pu
 		},
 		SourceInfo: SourceInfo{
 			Source:   "PULL_FROM_URL",
-			VideoUrl: encodedVideoUrl,
+			VideoUrl: videoUrl,
 		},
 	}
 	resp, err := o.restyPost(API_POST_PUBLISH_VIDEO_INIT, request)
