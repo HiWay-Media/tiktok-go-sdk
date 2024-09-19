@@ -61,7 +61,7 @@ curl --location 'https://open.tiktokapis.com/v2/post/publish/video/init/' \
 	  }
 	}'
 */
-func (o *tiktok) PostVideoInit(title, videoUrl string, privacyLevel string, disableDuet, disableComment, disableStitch bool) (*PublishVideoResponse, error) {
+func (o *tiktok) PostVideoInit(title, description, videoUrl string, privacyLevel string, disableDuet, disableComment, disableStitch bool) (*PublishVideoResponse, error) {
 	if !CheckPrivacyLevel(privacyLevel) {
 		return nil, PrivacyLevelWrong
 	}
@@ -69,6 +69,7 @@ func (o *tiktok) PostVideoInit(title, videoUrl string, privacyLevel string, disa
 	request := &PublishVideoRequest{
 		PostInfo: PostInfo{
 			Title:          title,
+			Description: 	description,
 			PrivacyLevel:   privacyLevel,
 			DisableDuet:    disableDuet,
 			DisableComment: disableComment,
