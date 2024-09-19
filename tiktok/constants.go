@@ -4,8 +4,8 @@ import "fmt"
 
 const (
 	BASE_URL                    = "https://open.tiktokapis.com"
-	QUERY_CREATOR_INFO          = "/v2/post/publish/creator_info/query"
-	POST_PUBLISH_VIDEO_INIT     = "/v2/post/publish/video/init"
+	QUERY_CREATOR_INFO          = "/v2/post/publish/creator_info/query/"
+	POST_PUBLISH_VIDEO_INIT     = "/v2/post/publish/video/init/"
     PUBLISH_STATUS_FETCH        = "/v2/post/publish/status/fetch/"
     POST_PUBLISH_CONTENT_INIT   = "/v2/post/publish/content/init/"
     USER_INFO  			 		= "/v2/user/info/"
