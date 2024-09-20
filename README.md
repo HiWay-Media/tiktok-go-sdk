@@ -27,6 +27,9 @@ import "github.com/HiWay-Media/tiktok-go-sdk"
 - Authentication
 - Fetch user data
 - Post videos
+- User Info API
+- Easy integration for TikTok API calls
+
 
 ## Contributing
 Feel free to submit issues and pull requests.
