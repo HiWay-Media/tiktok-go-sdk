@@ -45,8 +45,8 @@ type DataPublishVideo struct {
 }
 
 type PublishStatusFetchResponse struct {
-   Data  DataQueryCreatorInfo  `json:"data"`
-   Error ErrorObject `json:"error"`
+   Data  PublishStatusFetch   `json:"data"`
+   Error ErrorObject          `json:"error"`
 }
 
 type PublishStatusFetch struct {
