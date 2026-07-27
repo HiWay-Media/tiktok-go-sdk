@@ -1,0 +1,53 @@
+name: Release
+
+# On a v* tag: re-check that the tag matches the top of CHANGELOG.md (a tag and
+# release notes that describe different versions are worse than no release),
+# then publish the GitHub Release with that changelog section as its notes.
+# The library itself needs no build artifacts: consumers go get the module.
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # tags, for the consistency check
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.22.x"
+
+      - name: Gate (vet + test)
+        run: |
+          go vet ./...
+          go test ./...
+
+      - name: Check tag against CHANGELOG
+        run: ./scripts/release.sh --check "${GITHUB_REF_NAME}"
+
+      - name: Extract release notes
+        run: |
+          {
+            echo 'NOTES<<CHANGELOG_EOF'
+            ./scripts/release.sh --notes "${GITHUB_REF_NAME}"
+            echo 'CHANGELOG_EOF'
+          } >> "$GITHUB_ENV"
+
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "${GITHUB_REF_NAME}" \
+            --title "${GITHUB_REF_NAME}" \
+            --notes "${NOTES}" \
+            --verify-tag
