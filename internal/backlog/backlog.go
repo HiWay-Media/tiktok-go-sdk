@@ -31,7 +31,7 @@ func (m Milestone) Complete() bool { return m.Total > 0 && m.Done == m.Total }
 
 // itemRe matches a checklist line like:
 //
-//	- [ ] **TT-4 — Release GitHub sui tag**: workflow che ...
+//   - [ ] **TT-4 — Release GitHub sui tag**: workflow che ...
 var itemRe = regexp.MustCompile(`^\s*-\s*\[([ xX])\]\s*\*\*(TT-\d+)\s*—\s*(.*?)\*\*\s*:?\s*(.*)$`)
 
 var headingRe = regexp.MustCompile(`^##\s+(.*)$`)

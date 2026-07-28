@@ -2,6 +2,11 @@
 
 Le versioni seguono i tag `vX.Y.Z` del repository. Pre-1.0: `minor` per novità (anche breaking, se annotate), `patch` per fix.
 
+## 0.3.1
+
+- Backlog (audit): aggiunta la milestone **M6 — Audit: correttezza & igiene**, esito della lettura completa del package `tiktok`. Item TT-25..TT-36, ordinati per gravità. Il primo è anche il più serio: **TikTok risponde HTTP 200 anche quando la chiamata fallisce** (l'esito sta in `error.code` dentro il body), mentre l'SDK guarda solo `resp.IsError()` — quindi deserializza una risposta vuota e ritorna `err == nil`, rendendo *un post fallito indistinguibile da uno riuscito* (TT-25, verificato: `POST /v2/oauth/token/` con credenziali vuote risponde `200` + `{"error":"invalid_request",…}` e l'SDK restituisce un access token vuoto senza errore). Seguono: la busta d'errore OAuth che nessuno struct modella (TT-26), i messaggi d'errore copiati dalla chiamata sbagliata (TT-27), i typo nei campi esportati e nei tag JSON — `PubblishId`, `publicaly_available_post_id` (TT-28), i campi mancanti nelle response tra cui `max_video_post_duration_sec`, cioè proprio il dato per cui TikTok obbliga a chiamare creator_info (TT-29), i parametri di post hardcoded al posto del chiamante (TT-30), l'assenza di timeout di default (TT-31), la data race su `SetAccessToken` (TT-32), `NewTikTok` che non valida e promette un errore mai restituito (TT-33), `gofmt` non applicato su 14 file (TT-34), l'igiene della CI — `go mod tidy` in pipeline, secret esposti a ogni push, entry Dependabot per una directory `/tests` inesistente (TT-35) e resty fermo alla v2.7.0 (TT-36). Nessun cambiamento al comportamento dell'SDK: solo pianificazione, ogni item sarà una release a sé.
+- Tooling: `internal/backlog/backlog.go` riformattato con `gofmt` (indentazione di una lista in un commento).
+
 ## 0.3.0
 
 - Tooling (TT-1..TT-4): il repository adotta le regole di lavoro della famiglia checkfleet. **`CLAUDE.md` + `AGENTS.md`**: regole operative (ogni commit è una release taggata, mai `git push` dall'agent, gate `go vet` + `go test`, niente segreti, niente rete reale nei test, minimo Go 1.19), architettura file per file e trappole note del progetto — dall'import path che è `…/tiktok-go-sdk/tiktok` e non la radice del modulo, a `debugPrint` che stampa l'access token in chiaro quando `isDebug=true`.
