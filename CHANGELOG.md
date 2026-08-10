@@ -2,6 +2,13 @@
 
 Le versioni seguono i tag `vX.Y.Z` del repository. Pre-1.0: `minor` per novità (anche breaking, se annotate), `patch` per fix.
 
+## 0.6.0
+
+- Modelli (TT-28, M6): corretti i typo nei campi esportati **senza rompere chi li usa**. `DataPublishVideo.PublishId` e `PublishStatusFetch.PubliclyAvailablePostId` sono i nomi giusti; `PubblishId` e `PublicalyAvailablePostId` restano come campi **deprecati ma popolati**. Non sono alias con lo stesso tag JSON perché non possono esserlo: due campi che dichiarano lo stesso tag entrano in conflitto e `encoding/json` **scarta entrambi**, quindi il "fix" avrebbe svuotato anche il campo vecchio. Sono riempiti da un `UnmarshalJSON` dedicato.
+- Modelli (TT-28): la decodifica di `PublishStatusFetch` **accetta entrambe le grafie** del campo id (`publicly_available_post_id` e il `publicaly_available_post_id` che compare nella doc TikTok). Non è indecisione: se la grafia scelta è quella sbagliata il campo resta vuoto per sempre e in silenzio, mentre accettarle entrambe non costa niente e non può sbagliare.
+- Modelli (TT-29): `DataQueryCreatorInfo` espone **`max_video_post_duration_sec`**, che mancava pur essendo nell'esempio di risposta in cima al file — è il dato per cui TikTok *obbliga* a interrogare creator_info prima di pubblicare, e senza di esso il controllo "il video ci sta?" non è proprio possibile. `UserInfo` passa da tre campi al profilo completo (display name, username, bio, deep link, `is_verified`, follower/following/likes/video count), tutti opzionali sul filo perché TikTok ritorna solo quelli elencati in `fields` (la scelta dei `fields` è TT-19).
+- Test: entrambe le grafie del post id, campo deprecato che resta popolato, `max_video_post_duration_sec` e profilo utente completo, tutti su fixture JSON.
+
 ## 0.5.0
 
 - Errori (TT-25, TT-26, TT-27 + TT-12 — M6): **l'SDK si accorge quando una chiamata fallisce**. Era il difetto più grave del repository: TikTok risponde **`HTTP 200` anche quando rifiuta la richiesta**, mettendo l'esito dentro il body, mentre ogni metodo controllava solo `resp.IsError()` — quindi deserializzava una risposta vuota e ritornava `err == nil`, rendendo *un post rifiutato indistinguibile da uno pubblicato*. Ora ogni metodo passa da **`checkResponse`**, che ispeziona la busta d'errore **prima** dello status HTTP.

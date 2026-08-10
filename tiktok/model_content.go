@@ -1,5 +1,7 @@
 package tiktok
 
+import "encoding/json"
+
 /*
 {
    "data":{
@@ -33,6 +35,10 @@ type DataQueryCreatorInfo struct {
 	CommentDisabled     bool     `json:"comment_disabled"`
 	DuetDisabled        bool     `json:"duet_disabled"`
 	StitchDisabled      bool     `json:"stitch_disabled"`
+	// MaxVideoPostDurationSec is the longest video this creator may post. It is
+	// the reason TikTok requires a creator_info query before publishing: posting
+	// something longer is rejected, and the caller can only know from here.
+	MaxVideoPostDurationSec int64 `json:"max_video_post_duration_sec"`
 }
 
 type PublishVideoResponse struct {
@@ -41,7 +47,24 @@ type PublishVideoResponse struct {
 }
 
 type DataPublishVideo struct {
-	PubblishId string `json:"publish_id"`
+	PublishId string `json:"publish_id"`
+	// Deprecated: use PublishId. Kept, and kept populated, because it shipped
+	// as public API with the typo; two fields cannot share a JSON tag, so it is
+	// filled by UnmarshalJSON instead.
+	PubblishId string `json:"-"`
+}
+
+// UnmarshalJSON decodes the publish id and mirrors it into the deprecated
+// misspelled field.
+func (d *DataPublishVideo) UnmarshalJSON(b []byte) error {
+	type alias DataPublishVideo
+	var a alias
+	if err := json.Unmarshal(b, &a); err != nil {
+		return err
+	}
+	a.PubblishId = a.PublishId
+	*d = DataPublishVideo(a)
+	return nil
 }
 
 type PublishStatusFetchResponse struct {
@@ -50,10 +73,45 @@ type PublishStatusFetchResponse struct {
 }
 
 type PublishStatusFetch struct {
-	Status                   string  `json:"status"`
-	FailReason               string  `json:"fail_reason"`
-	UploadedBytes            int64   `json:"uploaded_bytes"`
-	PublicalyAvailablePostId []int64 `json:"publicaly_available_post_id"`
+	Status        string `json:"status"`
+	FailReason    string `json:"fail_reason"`
+	UploadedBytes int64  `json:"uploaded_bytes"`
+
+	// PubliclyAvailablePostId holds the ids of the posts that became public.
+	//
+	// Both spellings are accepted off the wire ("publicly_" and TikTok's own
+	// "publicaly_"): which one arrives is not something this SDK should bet on,
+	// and betting wrong means the field is silently always empty.
+	PubliclyAvailablePostId []int64 `json:"-"`
+	// Deprecated: use PubliclyAvailablePostId.
+	PublicalyAvailablePostId []int64 `json:"-"`
+}
+
+// UnmarshalJSON accepts either spelling of the post id field and fills both the
+// current and the deprecated one.
+func (p *PublishStatusFetch) UnmarshalJSON(b []byte) error {
+	var raw struct {
+		Status        string  `json:"status"`
+		FailReason    string  `json:"fail_reason"`
+		UploadedBytes int64   `json:"uploaded_bytes"`
+		Correct       []int64 `json:"publicly_available_post_id"`
+		Misspelled    []int64 `json:"publicaly_available_post_id"`
+	}
+	if err := json.Unmarshal(b, &raw); err != nil {
+		return err
+	}
+	ids := raw.Correct
+	if ids == nil {
+		ids = raw.Misspelled
+	}
+	*p = PublishStatusFetch{
+		Status:                   raw.Status,
+		FailReason:               raw.FailReason,
+		UploadedBytes:            raw.UploadedBytes,
+		PubliclyAvailablePostId:  ids,
+		PublicalyAvailablePostId: ids,
+	}
+	return nil
 }
 
 type VideoListResponse struct {
