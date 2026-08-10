@@ -1,52 +1,50 @@
 name: Go test workflow
 on: [push]
-#
-env:
-  APP_ENV: runner
-  # Setting an environment variable with the value of a configuration variable
-  CLIENT_KEY: ${{ secrets.CLIENT_KEY }}
-  # Setting an environment variable with the value of a configuration variable
-  CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
-  #
-#
+
 jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        go-version: [  '1.19.x', '1.20.x', '1.21.x', '1.22.x' ]
-    #
+        go-version: ["1.19.x", "1.20.x", "1.21.x", "1.22.x"]
+    # The legacy tests in test/ read these from the environment (TT-22 moves the
+    # ones that hit the real API behind a build tag). Scoped to this job on
+    # purpose: a secret exported at workflow level is handed to every job,
+    # including ones that only format-check the tree.
+    env:
+      APP_ENV: runner
+      CLIENT_KEY: ${{ secrets.CLIENT_KEY }}
+      CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Setup Go ${{ matrix.go-version }}
-        uses: actions/setup-go@v3
+        uses: actions/setup-go@v5
         with:
           go-version: ${{ matrix.go-version }}
           cache: true
-          #cache-dependency-path: subdir/go.sum
-      #
-      # You can test your matrix by printing the current Go version
       - name: Display Go version
         run: go version
-      #
-      - name: Install dependencies
-        run: go mod tidy
-      #
+      # `go mod tidy` would rewrite go.mod/go.sum in place and make CI pass on a
+      # tree that does not build from a clean checkout. Download and verify
+      # instead: an inconsistent go.mod must fail here, not be repaired here.
+      - name: Download dependencies
+        run: |
+          go mod download
+          go mod verify
       - name: Build
-        run: go build -v ./... 
-      #
+        run: go build -v ./...
+      - name: Vet
+        run: go vet ./...
       - name: Test with the Go CLI
         run: go test -v ./...
-      #
-    #
-  #
+
   # Format gate (TT-34). Pinned to one toolchain on purpose: gofmt's output has
   # changed across Go releases (doc comments in 1.19), so a floating version
   # would make the gate disagree with itself between runs.
   fmt:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions/setup-go@v5
         with:
           go-version: "1.25.x"
@@ -60,4 +58,3 @@ jobs:
             exit 1
           fi
           echo "all files are gofmt'd"
-  #

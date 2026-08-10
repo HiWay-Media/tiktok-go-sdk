@@ -1,28 +1,26 @@
 name: Go build
-#
+
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
-#
+    branches: ["main"]
+
 jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        go-version: [ '1.19.x', '1.20.x', '1.21.x' ]
+        go-version: ["1.19.x", "1.20.x", "1.21.x"]
     steps:
-    - uses: actions/checkout@v3
-    #
-    - name: Setup Go ${{ matrix.go-version }}
-      uses: actions/setup-go@v4
-      with:
-        go-version: ${{ matrix.go-version }}
-        cache-dependency-path: subdir/go.sum
-        cache: true
-    #
-    - name: Build
-      run: go build -v ./...
-    #
-  #
+      - uses: actions/checkout@v4
+      - name: Setup Go ${{ matrix.go-version }}
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ matrix.go-version }}
+          # No cache-dependency-path override: the module lives at the repo root.
+          # It used to point at "subdir/go.sum", a path that does not exist, and
+          # setup-go fails when a declared cache path resolves to nothing.
+          cache: true
+      - name: Build
+        run: go build -v ./...

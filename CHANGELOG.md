@@ -2,6 +2,10 @@
 
 Le versioni seguono i tag `vX.Y.Z` del repository. Pre-1.0: `minor` per novità (anche breaking, se annotate), `patch` per fix.
 
+## 0.3.3
+
+- CI (TT-35, M6): igiene delle pipeline. **`go mod tidy` → `go mod download` + `go mod verify`**: `tidy` riscrive `go.mod`/`go.sum` sul posto, quindi la CI passava anche su un albero che da checkout pulito non avrebbe buildato — un `go.mod` incoerente deve *fallire* lì, non essere riparato lì. I secret `CLIENT_KEY`/`CLIENT_SECRET` passano dal livello workflow (dove venivano consegnati a **ogni** job, incluso quello che si limita a controllare la formattazione) al solo job che li usa davvero. Aggiunto `go vet ./...` al gate e action aggiornate a `checkout@v4`/`setup-go@v5`. Corretti due path che non esistono: la entry Dependabot per `/tests` (il repo ha `/test`, e il modulo è uno solo — Dependabot riportava la config come rotta) e `cache-dependency-path: subdir/go.sum` in `go-build.yml`, su cui setup-go fallisce quando il path non risolve. Lint e `govulncheck` restano fuori: sono TT-6.
+
 ## 0.3.2
 
 - Formato (TT-34, M6): `gofmt -w` su tutto l'albero — 14 file su 21 non erano formattati, con tab e spazi mischiati nella stessa struct (`constants.go`, `model_content.go`, `request_content.go`, `tiktok.go`, …). **Nessun cambiamento di comportamento**: solo spaziatura e allineamento, ma senza questo passaggio ogni diff successivo di M6 sarebbe stato illeggibile, mescolando la correzione vera con la riformattazione. Aggiunto il job **`fmt`** in `go-test.yml` che fallisce se `gofmt -l` trova qualcosa, **pinnato a una singola versione di Go** (1.25) e non a `stable`: l'output di gofmt è cambiato tra le release (la riformattazione dei doc comment in 1.19), quindi un toolchain flottante farebbe litigare il gate con se stesso tra una run e l'altra.

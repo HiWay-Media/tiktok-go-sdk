@@ -1,15 +1,14 @@
 ---
 version: 2
 updates:
+  # One Go module, at the repo root. There used to be a third entry for
+  # "/tests": that directory does not exist (the tests live in /test and belong
+  # to the root module), so Dependabot reported the config as broken.
   - package-ecosystem: gomod
     directory: /
     schedule:
       interval: weekly
   - package-ecosystem: github-actions
     directory: /
-    schedule:
-      interval: weekly
-  - package-ecosystem: gomod
-    directory: /tests
     schedule:
       interval: weekly
