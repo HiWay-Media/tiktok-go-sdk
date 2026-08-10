@@ -34,7 +34,7 @@ func (o *tiktok) ResearchAdQuery(searchTerm string) {
 	request := &ResearchAdQueryRequest{
 		SearchTerm: searchTerm,
 	}
-	resp, err := o.restyPostWithQueryParams(API_RESEARCH_AD_QUERY, request, data)
+	resp, err := o.restyPostWithQueryParams(RESEARCH_AD_QUERY, request, data)
 	if err != nil {
 		o.debugPrint(err)
 		//return nil, err

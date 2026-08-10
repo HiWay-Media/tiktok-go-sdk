@@ -16,7 +16,7 @@ curl --location --request POST 'https://open.tiktokapis.com/v2/post/publish/crea
 --header 'Content-Type: application/json; charset=UTF-8'
 */
 func (o *tiktok) CreatorInfo() (*QueryCreatorInfoResponse, error) {
-	resp, err := o.restyPost(API_QUERY_CREATOR_INFO, nil)
+	resp, err := o.restyPost(QUERY_CREATOR_INFO, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -80,7 +80,7 @@ func (o *tiktok) PostVideoInit(title, description, videoUrl string, privacyLevel
 			VideoUrl: videoUrl,
 		},
 	}
-	resp, err := o.restyPost(API_POST_PUBLISH_VIDEO_INIT, request)
+	resp, err := o.restyPost(POST_PUBLISH_VIDEO_INIT, request)
 	if err != nil {
 		return nil, err
 	}
@@ -115,7 +115,7 @@ func (o *tiktok) PublishVideo(publishId string) (*PublishStatusFetchResponse, er
 	request := &PublishStatusFetchRequest{
 		PublishId: publishId,
 	}
-	resp, err := o.restyPost(API_PUBLISH_STATUS_FETCH, request)
+	resp, err := o.restyPost(PUBLISH_STATUS_FETCH, request)
 	if err != nil {
 		return nil, err
 	}
@@ -208,7 +208,7 @@ func (o *tiktok) GetVideoList(count int64) (*VideoListResponse, error) {
 	request := &VideoListRequest{
 		MaxCount: count,
 	}
-	resp, err := o.restyPostWithQueryParams(API_VIDEO_LIST, request, map[string]string{
+	resp, err := o.restyPostWithQueryParams(VIDEO_LIST, request, map[string]string{
 		"fields": "cover_image_url,id,title",
 	})
 	if err != nil {

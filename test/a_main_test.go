@@ -19,33 +19,46 @@ func TestMain(m *testing.M) {
 	m.Run()
 }
 
-func TestNewTikTok(t *testing.T) {
-	c, err := GetTikTok()
+// newClient builds a client with placeholder credentials, for the tests that
+// never reach the network. NewTikTok rejects empty credentials, so these must
+// not be blank.
+func newClient(t *testing.T) tiktok.ITiktok {
+	t.Helper()
+	c, err := tiktok.NewTikTok("test-client-key", "test-client-secret", false)
 	if err != nil {
-		t.Fatalf(err.Error())
+		t.Fatal(err)
 	}
+	return c
+}
+
+// GetTikTok builds a client with the real app credentials, and skips the test
+// when they are not in the environment. Only the integration tests need it: a
+// missing credential must skip, never fail — otherwise a fork without the
+// repository secrets sees a red CI it cannot fix.
+func GetTikTok(t *testing.T) tiktok.ITiktok {
+	t.Helper()
+	clientKey := os.Getenv("CLIENT_KEY")
+	clientSecret := os.Getenv("CLIENT_SECRET")
+	if clientKey == "" || clientSecret == "" {
+		t.Skip("CLIENT_KEY/CLIENT_SECRET not set")
+	}
+	c, err := tiktok.NewTikTok(clientKey, clientSecret, false)
+	if err != nil {
+		t.Fatal(err)
+	}
+	return c
+}
+
+func TestNewTikTok(t *testing.T) {
+	c := newClient(t)
 	log.Println(c.IsDebug())
 }
 
 func TestAuthCodeUrl(t *testing.T) {
-	c, err := GetTikTok()
-	if err != nil {
-		t.Fatalf(err.Error())
-	}
+	c := newClient(t)
 	resp := c.CodeAuthUrl()
-	if err != nil {
-		t.Fatalf(err.Error())
+	if resp == "" {
+		t.Fatal("CodeAuthUrl returned an empty URL")
 	}
 	log.Println("resp ", resp)
-}
-
-func GetTikTok() (tiktok.ITiktok, error) {
-	clientKey := os.Getenv("CLIENT_KEY")
-	clientSecret := os.Getenv("CLIENT_SECRET")
-	//
-	c, err := tiktok.NewTikTok(clientKey, clientSecret, false)
-	if err != nil {
-		return nil, err
-	}
-	return c, nil
 }

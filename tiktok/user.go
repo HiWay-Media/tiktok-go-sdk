@@ -17,7 +17,7 @@ curl -L -X GET 'https://open.tiktokapis.com/v2/user/info/?fields=open_id,union_i
 -H 'Authorization: Bearer act.example12345Example12345Example'
 */
 func (o *tiktok) UserInfo() (*UserInfoResponse, error) {
-	resp, err := o.restyGet(API_USER_INFO, nil)
+	resp, err := o.restyGet(USER_INFO, nil)
 	if err != nil {
 		return nil, err
 	}

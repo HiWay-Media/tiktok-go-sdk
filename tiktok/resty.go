@@ -28,7 +28,7 @@ func (o *tiktok) restyPost(url string, body interface{}) (*resty.Response, error
 	resp, err := o.restClient.R().
 		SetHeader("Accept", "application/json").
 		SetHeader("Content-Type", "application/json").
-		SetHeader("Authorization", "Bearer "+o.accessToken).
+		SetHeader("Authorization", "Bearer "+o.GetAccessToken()).
 		SetBody(body).
 		Post(url)
 
@@ -55,7 +55,7 @@ func (o *tiktok) restyPostWithQueryParams(url string, body interface{}, queryPar
 	resp, err := o.restClient.R().
 		SetHeader("Accept", "application/json").
 		SetHeader("Content-Type", "application/json").
-		SetHeader("Authorization", "Bearer "+o.accessToken).
+		SetHeader("Authorization", "Bearer "+o.GetAccessToken()).
 		SetQueryParams(queryParams).
 		SetBody(body).
 		Post(url)
@@ -68,7 +68,7 @@ func (o *tiktok) restyPostWithQueryParams(url string, body interface{}, queryPar
 
 func (o *tiktok) restyGet(url string, queryParams map[string]string) (*resty.Response, error) {
 	resp, err := o.restClient.R().
-		SetHeader("Authorization", "Bearer "+o.accessToken).
+		SetHeader("Authorization", "Bearer "+o.GetAccessToken()).
 		SetQueryParams(queryParams).
 		Get(url)
 	//

@@ -1,6 +1,10 @@
 package tiktok
 
 import (
+	"net/http"
+	"sync"
+	"time"
+
 	"github.com/go-resty/resty/v2"
 	"golang.org/x/oauth2"
 )
@@ -28,16 +32,39 @@ type tiktok struct {
 	debug        bool
 	clientKey    string
 	clientSecret string
-	accessToken  string
 	OAuth2Config *oauth2.Config
+
+	// baseURL, timeout and httpClient are set by the options and consumed once,
+	// while the resty client is being built.
+	baseURL    string
+	timeout    time.Duration
+	httpClient *http.Client
+
+	// accessToken is read on every request and can be replaced at any time by
+	// SetAccessToken, so it is guarded: a client is meant to be shared across
+	// goroutines.
+	mu          sync.RWMutex
+	accessToken string
 }
 
-func NewTikTok(clientKey, clientSecret string, isDebug bool) (ITiktok, error) {
+// NewTikTok builds a client for the TikTok API.
+//
+// clientKey and clientSecret are required: they identify the app and every
+// endpoint refuses the request without them. Options are optional and keep the
+// three-argument form source compatible.
+func NewTikTok(clientKey, clientSecret string, isDebug bool, opts ...Option) (ITiktok, error) {
+	if clientKey == "" {
+		return nil, ErrClientKeyRequired
+	}
+	if clientSecret == "" {
+		return nil, ErrClientSecretRequired
+	}
 	o := &tiktok{
 		clientKey:    clientKey,
 		clientSecret: clientSecret,
-		restClient:   resty.New(),
 		debug:        isDebug,
+		baseURL:      BASE_URL,
+		timeout:      DefaultTimeout,
 		OAuth2Config: &oauth2.Config{
 			ClientID:     clientKey,
 			ClientSecret: clientSecret,
@@ -47,16 +74,31 @@ func NewTikTok(clientKey, clientSecret string, isDebug bool) (ITiktok, error) {
 			// /[]string{"user.info.basic", "video.list", "video.publish", "video.delete", }
 		},
 	}
-	o.restClient.SetDebug(isDebug)
-	o.restClient.SetBaseURL(BASE_URL)
+	for _, opt := range opts {
+		opt(o)
+	}
+	if o.httpClient != nil {
+		o.restClient = resty.NewWithClient(o.httpClient)
+	} else {
+		o.restClient = resty.New()
+	}
+	o.restClient.SetDebug(o.debug)
+	o.restClient.SetBaseURL(o.baseURL)
+	if o.timeout > 0 {
+		o.restClient.SetTimeout(o.timeout)
+	}
 	return o, nil
 }
 
 func (o *tiktok) SetAccessToken(token string) {
+	o.mu.Lock()
+	defer o.mu.Unlock()
 	o.accessToken = token
 }
 
 func (o *tiktok) GetAccessToken() string {
+	o.mu.RLock()
+	defer o.mu.RUnlock()
 	return o.accessToken
 }
 

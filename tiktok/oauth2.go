@@ -31,7 +31,7 @@ func (o *tiktok) GetClientAccessTokenManagement() (*AccessTokenManagement, error
 	data["client_secret"] = o.clientSecret
 	data["grant_type"] = "client_credentials"
 	//
-	resp, err := o.restyPostFormUrlEncoded(Endpoint.TokenURL, data)
+	resp, err := o.restyPostFormUrlEncoded(OAUTH_TOKEN, data)
 	if err != nil {
 		return nil, err
 	}

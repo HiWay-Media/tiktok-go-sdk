@@ -11,13 +11,13 @@ Questo file definisce le regole operative per gli agent (Copilot, Claude, altri 
 - **Gate prima di chiudere**: `go vet ./...` + `go test ./...` verdi.
 - **Todo -> `BACKLOG.md`** (id stabili `TT-n`, milestone `## Mn — ...`): sincronizzati in issue/milestone GitHub da `cmd/backlog-sync`. Niente TODO sparsi nel codice.
 - **Niente segreti**: `CLIENT_KEY`/`CLIENT_SECRET`/token solo da env, mai in codice, test, doc, output.
-- **Mai rete reale nei test**: nuovi test con `httptest` + `SetBaseURL`. Un test che chiama `open.tiktokapis.com` e' un bug.
+- **Mai rete reale nei test**: nuovi test con `httptest` + `WithBaseURL`. Le chiamate reali stanno dietro `//go:build integration`. Un test che chiama `open.tiktokapis.com` in `go test ./...` e' un bug.
 - **Go 1.19 minimo** (matrice CI 1.19->1.22): niente `errors.Join`, `slices`/`maps`, `min`/`max`, `for i := range N`.
 - **Lingua = inglese** per codice, commenti, godoc, errori. `CHANGELOG.md` e `BACKLOG.md` restano in italiano.
 
 ## Comandi
 
-- `go build ./...` - `go vet ./...` - `go test ./...`
+- `go build ./...` - `go vet ./...` - `go test -race ./...` - integrazione: `go test -tags integration ./test/`
 - Release: `./scripts/release.sh` (tag dalla cima del CHANGELOG) - verifica: `./scripts/release.sh --check`
 - Backlog: `go run ./cmd/backlog-sync -dry-run`
 
@@ -27,10 +27,10 @@ Questo file definisce le regole operative per gli agent (Copilot, Claude, altri 
 - Un metodo nuovo va aggiunto a `ITiktok` in `tiktok/tiktok.go`, altrimenti e' irraggiungibile (vedi `ResearchAdQuery`, incompleto: fuori interfaccia e ignora l'errore).
 - `debugPrint` stampa gli oggetti interi, **access token compreso**: `isDebug=true` solo in locale.
 - Nomi esportati SCREAMING_SNAKE (`BASE_URL`, `PUBLIC_TO_EVERYONE`, ...) sono API pubblica: rinominare solo con alias deprecati.
-- `PostPhotoInit` usa la costante di path relativa: funziona solo grazie a `SetBaseURL`. Uniformare solo con test.
-- I test in `test/` sono legacy e toccano l'API reale con i secret di repo: non prenderli a modello.
+- I metodi usano i **path relativi**, mai le `API_*` assolute: con un URL assoluto resty ignora la base URL e il test sfugge alla rete vera. Ogni endpoint nuovo va aggiunto a `TestEndpointsUseTheBaseURL`.
+- `NewTikTok` valida le credenziali, applica un timeout di default (30s) e accetta opzioni variadiche; l'access token e' protetto da mutex.
 - Dipendenze: solo `go-resty/resty/v2` e `golang.org/x/oauth2`. Non aggiungerne senza forte motivazione.
-- Pre-1.0 (`v0.2.x`): breaking change ammessi con bump minor e nota nel CHANGELOG.
+- Pre-1.0 (`v0.4.x`): breaking change ammessi con bump minor e nota nel CHANGELOG.
 
 ## Puntatori
 
