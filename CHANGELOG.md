@@ -2,6 +2,11 @@
 
 Le versioni seguono i tag `vX.Y.Z` del repository. Pre-1.0: `minor` per novità (anche breaking, se annotate), `patch` per fix.
 
+## 0.7.1
+
+- Dipendenze (TT-36, M6 — **chiude M6**): `go-resty/resty/v2` da **v2.7.0 (2022) a v2.14.0** e `golang.org/x/oauth2` da **v0.21.0 a v0.26.0**, con `x/net` che segue a v0.27.0. Sono le versioni più recenti **compatibili con Go 1.19**, il minimo dichiarato: resty da `v2.15.0` in poi richiede `go 1.20`, `x/oauth2` da `v0.27.0` richiede `go 1.23`. Verificato prima di aggiornare, non dopo — un bump che alza silenziosamente il minimo Go romperebbe la prima entry della matrice CI e, peggio, le build di chi importa la libreria. Nessun cambiamento di comportamento: la suite (compresa `-race`) passa invariata.
+- Backlog: aggiunto **TT-37** — decidere se restare su Go 1.19 o alzare il minimo. Non è un aggiornamento ma una scelta di prodotto: finché il minimo è 1.19 le dipendenze sono ferme dove le lascia questa release e Dependabot proporrà per sempre bump che rompono la matrice; alzarlo è un breaking change per chi importa e va annunciato.
+
 ## 0.7.0
 
 - Content Posting (TT-30, M6): le scelte tornano a chi chiama. Nuovi **`PostVideo(VideoPost)`** e **`PostPhoto(PhotoPost)`** (entrambi in `ITiktok`), che espongono tutte le opzioni documentate: `video_cover_timestamp_ms` — che era già nello struct di richiesta ma **nessuna firma poteva valorizzare**, quindi era codice morto — e `disable_comment`, `auto_add_music`, `photo_cover_index`, finora **hardcoded** a `false`/`true`/`1` dentro `PostPhotoInit` senza modo di cambiarli.
