@@ -2,6 +2,11 @@
 
 Le versioni seguono i tag `vX.Y.Z` del repository. Pre-1.0: `minor` per novità (anche breaking, se annotate), `patch` per fix.
 
+## 0.7.2
+
+- Regole (`CLAUDE.md`, `AGENTS.md`): aggiunta la regola **TDD**, che mancava. Il test si scrive prima del codice e lo si vede fallire *per il motivo giusto*; per ogni fix di bug la **controprova è obbligatoria** — rimettere il difetto, verificare che il test fallisca, ripristinare. Un test scritto dopo il fix e mai visto rosso non dimostra niente: potrebbe passare anche senza il fix. Aggiunta anche l'avvertenza sulle **guardie contro i falsi positivi** (i test che devono passare in *entrambi* gli stati): vanno dichiarate tali nel commento, altrimenti durante una controprova sembrano un buco. Il gate di chiusura passa a `go test -race ./...`, che è quello che gira in CI.
+- Verifica arretrata: i test di M6 sono stati scritti **dopo** il codice, quindi la controprova mancante su TT-25 — il difetto più grave della milestone — è stata eseguita ora, ripristinando il codice pre-fix (solo `resp.IsError()`) su tre endpoint. Risultato: `TestErrorInBandIsDetected` fallisce (`HTTP 200 with an error envelope must produce an error`), `TestOAuthErrorEnvelope` fallisce restituendo esattamente lo scenario dell'audit (`&{AccessToken: TokenType: ExpiresIn:0}`, cioè token vuoto e nessun errore) e `TestHTTPErrorWithUnparsableBody` fallisce sul tipo dell'errore; `TestSuccessEnvelopeIsNotAnError` resta verde, come deve. I test hanno denti. Nessun cambiamento al codice dell'SDK.
+
 ## 0.7.1
 
 - Dipendenze (TT-36, M6 — **chiude M6**): `go-resty/resty/v2` da **v2.7.0 (2022) a v2.14.0** e `golang.org/x/oauth2` da **v0.21.0 a v0.26.0**, con `x/net` che segue a v0.27.0. Sono le versioni più recenti **compatibili con Go 1.19**, il minimo dichiarato: resty da `v2.15.0` in poi richiede `go 1.20`, `x/oauth2` da `v0.27.0` richiede `go 1.23`. Verificato prima di aggiornare, non dopo — un bump che alza silenziosamente il minimo Go romperebbe la prima entry della matrice CI e, peggio, le build di chi importa la libreria. Nessun cambiamento di comportamento: la suite (compresa `-race`) passa invariata.

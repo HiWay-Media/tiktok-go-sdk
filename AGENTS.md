@@ -8,7 +8,8 @@ Questo file definisce le regole operative per gli agent (Copilot, Claude, altri 
 
 - **Ogni commit = release taggata `vX.Y.Z`**: nuova sezione in `CHANGELOG.md` (Keep a Changelog, in italiano) + `./scripts/release.sh` per il tag. Bump `minor` per novita' (nuovi endpoint/metodi), `patch` per fix. **Esenti**: auto-commit su `.claude/settings*.json` e commit di solo CI.
 - **MAI `git push`**: lo fa sempre l'utente. MAI `Co-Authored-By` nei commit.
-- **Gate prima di chiudere**: `go vet ./...` + `go test ./...` verdi.
+- **TDD**: test **prima** del codice, visto fallire per il motivo giusto. Per ogni bug fix la **controprova**: rimetti il difetto, verifica che il test fallisca, ripristina. Un test mai visto rosso non dimostra nulla. Le guardie che devono passare in entrambi gli stati vanno segnalate nel commento.
+- **Gate prima di chiudere**: `go vet ./...` + `go test -race ./...` verdi.
 - **Todo -> `BACKLOG.md`** (id stabili `TT-n`, milestone `## Mn — ...`): sincronizzati in issue/milestone GitHub da `cmd/backlog-sync`. Niente TODO sparsi nel codice.
 - **Niente segreti**: `CLIENT_KEY`/`CLIENT_SECRET`/token solo da env, mai in codice, test, doc, output.
 - **Mai rete reale nei test**: nuovi test con `httptest` + `WithBaseURL`. Le chiamate reali stanno dietro `//go:build integration`. Un test che chiama `open.tiktokapis.com` in `go test ./...` e' un bug.

@@ -84,6 +84,10 @@ func TestOAuthErrorEnvelope(t *testing.T) {
 	}
 }
 
+// TestSuccessEnvelopeIsNotAnError is the guard against the opposite mistake:
+// it must pass both with and without the in-band error check, so seeing it
+// green while the tests above are red is the expected result of the
+// counter-proof, not a hole in it.
 func TestSuccessEnvelopeIsNotAnError(t *testing.T) {
 	srv := bodyServer(t, http.StatusOK, `{"data":{"publish_id":"pid"},"error":{"code":"ok","message":"","log_id":"x"}}`)
 	c := newTestClient(t, srv)
