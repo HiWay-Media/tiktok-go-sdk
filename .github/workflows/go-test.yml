@@ -40,3 +40,24 @@ jobs:
       #
     #
   #
+  # Format gate (TT-34). Pinned to one toolchain on purpose: gofmt's output has
+  # changed across Go releases (doc comments in 1.19), so a floating version
+  # would make the gate disagree with itself between runs.
+  fmt:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.25.x"
+      - name: gofmt
+        run: |
+          unformatted="$(gofmt -l .)"
+          if [ -n "$unformatted" ]; then
+            echo "these files are not gofmt'd:" >&2
+            echo "$unformatted" >&2
+            echo "run: gofmt -w ." >&2
+            exit 1
+          fi
+          echo "all files are gofmt'd"
+  #

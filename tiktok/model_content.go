@@ -21,8 +21,8 @@ package tiktok
 */
 
 type QueryCreatorInfoResponse struct {
-	Data  DataQueryCreatorInfo  `json:"data"`
-	Error ErrorObject `json:"error"`
+	Data  DataQueryCreatorInfo `json:"data"`
+	Error ErrorObject          `json:"error"`
 }
 
 type DataQueryCreatorInfo struct {
@@ -36,37 +36,37 @@ type DataQueryCreatorInfo struct {
 }
 
 type PublishVideoResponse struct {
-   Data  DataPublishVideo `json:"data"`
-	Error ErrorObject `json:"error"`
+	Data  DataPublishVideo `json:"data"`
+	Error ErrorObject      `json:"error"`
 }
 
 type DataPublishVideo struct {
-	PubblishId    string   `json:"publish_id"`
+	PubblishId string `json:"publish_id"`
 }
 
 type PublishStatusFetchResponse struct {
-   Data  PublishStatusFetch   `json:"data"`
-   Error ErrorObject          `json:"error"`
+	Data  PublishStatusFetch `json:"data"`
+	Error ErrorObject        `json:"error"`
 }
 
 type PublishStatusFetch struct {
-	Status                     string   `json:"status"`
-	FailReason                 string   `json:"fail_reason"`
-	UploadedBytes              int64   `json:"uploaded_bytes"`
-	PublicalyAvailablePostId   []int64   `json:"publicaly_available_post_id"`
+	Status                   string  `json:"status"`
+	FailReason               string  `json:"fail_reason"`
+	UploadedBytes            int64   `json:"uploaded_bytes"`
+	PublicalyAvailablePostId []int64 `json:"publicaly_available_post_id"`
 }
 
 type VideoListResponse struct {
-   Data  DataVideoList `json:"data"`
-	Error ErrorObject `json:"error"`
+	Data  DataVideoList `json:"data"`
+	Error ErrorObject   `json:"error"`
 }
 
 type DataVideoList struct {
-   Videos []Video `json:"videos"`
+	Videos []Video `json:"videos"`
 }
 
 type Video struct {
-	ID                 string   `json:"id"`
-   Title                   string `json:"title"`
-	CoverImageUrl                     string   `json:"cover_image_url"`
+	ID            string `json:"id"`
+	Title         string `json:"title"`
+	CoverImageUrl string `json:"cover_image_url"`
 }

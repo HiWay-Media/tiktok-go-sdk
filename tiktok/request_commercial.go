@@ -17,17 +17,17 @@ package tiktok
 }*/
 
 type ResearchAdQueryRequest struct {
-    Filters ResearchAdQueryFilter `json:"filters"`
-    SearchTerm string `json:"search_term"`
+	Filters    ResearchAdQueryFilter `json:"filters"`
+	SearchTerm string                `json:"search_term"`
 }
 
 type ResearchAdQueryFilter struct {
-    AdvertiserBusinessIDs   []int64                 `json:"advertiser_business_ids"`
-    AdPublishedDateRange    AdPublishedDateRange    `json:"ad_published_date_range"`
-    CountryCode             string                  `json:"country_code"`
+	AdvertiserBusinessIDs []int64              `json:"advertiser_business_ids"`
+	AdPublishedDateRange  AdPublishedDateRange `json:"ad_published_date_range"`
+	CountryCode           string               `json:"country_code"`
 }
 
 type AdPublishedDateRange struct {
-    Min string `json:"min"`
-    Max string `json:"max"`
+	Min string `json:"min"`
+	Max string `json:"max"`
 }

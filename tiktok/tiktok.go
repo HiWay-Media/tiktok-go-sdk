@@ -19,7 +19,7 @@ type ITiktok interface {
 	PublishVideo(publishId string) (*PublishStatusFetchResponse, error)
 	GetVideoList(count int64) (*VideoListResponse, error)
 	PostPhotoInit(title, description, privacyLevel string, photoUrls []string, photoMode string) (*PublishStatusFetchResponse, error)
- 	UserInfo() (*UserInfoResponse, error)
+	UserInfo() (*UserInfoResponse, error)
 	//
 }
 
@@ -43,7 +43,7 @@ func NewTikTok(clientKey, clientSecret string, isDebug bool) (ITiktok, error) {
 			ClientSecret: clientSecret,
 			RedirectURL:  "",
 			//Scopes:       []string{"user.info.basic", "video.list", },
-			Endpoint:     Endpoint,
+			Endpoint: Endpoint,
 			// /[]string{"user.info.basic", "video.list", "video.publish", "video.delete", }
 		},
 	}

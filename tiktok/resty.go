@@ -51,7 +51,7 @@ func (o *tiktok) restyPostFormUrlEncoded(url string, data map[string]string) (*r
 	return resp, nil
 }
 
-func (o *tiktok) restyPostWithQueryParams(url string, body interface{},  queryParams map[string]string) (*resty.Response, error) {
+func (o *tiktok) restyPostWithQueryParams(url string, body interface{}, queryParams map[string]string) (*resty.Response, error) {
 	resp, err := o.restClient.R().
 		SetHeader("Accept", "application/json").
 		SetHeader("Content-Type", "application/json").

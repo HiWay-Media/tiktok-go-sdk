@@ -69,7 +69,7 @@ func (o *tiktok) PostVideoInit(title, description, videoUrl string, privacyLevel
 	request := &PublishVideoRequest{
 		PostInfo: PostInfo{
 			Title:          title,
-			Description: 	description,
+			Description:    description,
 			PrivacyLevel:   privacyLevel,
 			DisableDuet:    disableDuet,
 			DisableComment: disableComment,

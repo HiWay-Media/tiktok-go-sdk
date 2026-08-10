@@ -18,8 +18,7 @@ func TestCreatorInfo(t *testing.T) {
 	log.Println("resp ", c.IsDebug())
 }
 
-
-func TestGetVideoList( t *testing.T){
+func TestGetVideoList(t *testing.T) {
 	c, err := GetTikTok()
 	if err != nil {
 		t.Fatalf(err.Error())
