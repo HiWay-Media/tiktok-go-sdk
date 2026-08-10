@@ -61,22 +61,42 @@ curl --location 'https://open.tiktokapis.com/v2/post/publish/video/init/' \
 	}'
 */
 func (o *tiktok) PostVideoInit(title, description, videoUrl string, privacyLevel string, disableDuet, disableComment, disableStitch bool) (*PublishVideoResponse, error) {
-	if !CheckPrivacyLevel(privacyLevel) {
+	return o.PostVideo(VideoPost{
+		Title:          title,
+		Description:    description,
+		VideoUrl:       videoUrl,
+		PrivacyLevel:   privacyLevel,
+		DisableDuet:    disableDuet,
+		DisableComment: disableComment,
+		DisableStitch:  disableStitch,
+	})
+}
+
+// PostVideo publishes a video from a URL, with every documented post option
+// available to the caller.
+//
+// It is the form to prefer: PostVideoInit takes its arguments positionally and
+// cannot express VideoCoverTimestampMS at all.
+func (o *tiktok) PostVideo(p VideoPost) (*PublishVideoResponse, error) {
+	if !CheckPrivacyLevel(p.PrivacyLevel) {
 		return nil, ErrPrivacyLevel
 	}
-	//
+	if p.VideoUrl == "" {
+		return nil, ErrVideoUrlRequired
+	}
 	request := &PublishVideoRequest{
 		PostInfo: PostInfo{
-			Title:          title,
-			Description:    description,
-			PrivacyLevel:   privacyLevel,
-			DisableDuet:    disableDuet,
-			DisableComment: disableComment,
-			DisableStitch:  disableStitch,
+			Title:                 p.Title,
+			Description:           p.Description,
+			PrivacyLevel:          p.PrivacyLevel,
+			DisableDuet:           p.DisableDuet,
+			DisableComment:        p.DisableComment,
+			DisableStitch:         p.DisableStitch,
+			VideoCoverTimestampMS: p.VideoCoverTimestampMS,
 		},
 		SourceInfo: SourceInfo{
 			Source:   "PULL_FROM_URL",
-			VideoUrl: videoUrl,
+			VideoUrl: p.VideoUrl,
 		},
 	}
 	resp, err := o.restyPost(POST_PUBLISH_VIDEO_INIT, request)
@@ -154,25 +174,47 @@ curl --location 'https://open.tiktokapis.com/v2/post/publish/content/init/' \
 */
 
 func (o *tiktok) PostPhotoInit(title, description, privacyLevel string, photoUrls []string, photoMode string) (*PublishStatusFetchResponse, error) {
-	if !CheckPrivacyLevel(privacyLevel) {
+	return o.PostPhoto(PhotoPost{
+		Title:        title,
+		Description:  description,
+		PrivacyLevel: privacyLevel,
+		PhotoUrls:    photoUrls,
+		PostMode:     photoMode,
+		// Defaults of the previous implementation, kept so this call behaves
+		// exactly as it did before PostPhoto existed.
+		AutoAddMusic:    true,
+		PhotoCoverIndex: 1,
+	})
+}
+
+// PostPhoto publishes a photo post, with the options the previous entry point
+// decided on the caller's behalf (comments, auto-added music, cover index).
+func (o *tiktok) PostPhoto(p PhotoPost) (*PublishStatusFetchResponse, error) {
+	if !CheckPrivacyLevel(p.PrivacyLevel) {
 		return nil, ErrPrivacyLevel
 	}
-	if !CheckPostMode(photoMode) {
+	if !CheckPostMode(p.PostMode) {
 		return nil, ErrPostMode
+	}
+	// A photo post with no image is rejected by TikTok anyway: failing here
+	// costs a round trip less and says what is actually wrong.
+	if len(p.PhotoUrls) == 0 {
+		return nil, ErrPhotoUrlsRequired
 	}
 	request := &PublishPhotoRequest{
 		PostInfo: PostPhotoInfo{
-			Title:          title,
-			PrivacyLevel:   privacyLevel,
-			DisableComment: false,
-			AutoAddMusic:   true,
+			Title:          p.Title,
+			Description:    p.Description,
+			PrivacyLevel:   p.PrivacyLevel,
+			DisableComment: p.DisableComment,
+			AutoAddMusic:   p.AutoAddMusic,
 		},
 		SourceInfo: PhotoSourceInfo{
 			Source:          "PULL_FROM_URL",
-			PhotoCoverIndex: 1,
-			PhotoImages:     photoUrls,
+			PhotoCoverIndex: p.PhotoCoverIndex,
+			PhotoImages:     p.PhotoUrls,
 		},
-		PostMode:  photoMode,
+		PostMode:  p.PostMode,
 		MediaType: "PHOTO",
 	}
 	resp, err := o.restyPost(POST_PUBLISH_CONTENT_INIT, request)

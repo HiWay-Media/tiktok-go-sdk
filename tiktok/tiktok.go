@@ -20,9 +20,11 @@ type ITiktok interface {
 	GetClientAccessTokenManagement() (*AccessTokenManagement, error)
 	CreatorInfo() (*QueryCreatorInfoResponse, error)
 	PostVideoInit(title, description, videoUrl string, privacyLevel string, disableDuet, disableComment, disableStitch bool) (*PublishVideoResponse, error)
+	PostVideo(p VideoPost) (*PublishVideoResponse, error)
 	PublishVideo(publishId string) (*PublishStatusFetchResponse, error)
 	GetVideoList(count int64) (*VideoListResponse, error)
 	PostPhotoInit(title, description, privacyLevel string, photoUrls []string, photoMode string) (*PublishStatusFetchResponse, error)
+	PostPhoto(p PhotoPost) (*PublishStatusFetchResponse, error)
 	UserInfo() (*UserInfoResponse, error)
 	//
 }

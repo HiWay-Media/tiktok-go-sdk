@@ -25,8 +25,10 @@ type PublishVideoRequest struct {
 }
 
 type PostInfo struct {
-	Title                 string `json:"title"`
-	Description           string `json:"description"`
+	Title string `json:"title"`
+	// Not a documented post_info field for a video (the documented text field
+	// is Title), so it is only sent when the caller sets it.
+	Description           string `json:"description,omitempty"`
 	PrivacyLevel          string `json:"privacy_level"`
 	DisableDuet           bool   `json:"disable_duet"`
 	DisableComment        bool   `json:"disable_comment"`
@@ -66,4 +68,35 @@ type PhotoSourceInfo struct {
 
 type VideoListRequest struct {
 	MaxCount int64 `json:"max_count"`
+}
+
+// VideoPost describes a video to publish with PostVideo. It carries every
+// documented post_info option, including VideoCoverTimestampMS, which the
+// positional PostVideoInit has no way to express.
+type VideoPost struct {
+	Title string
+	// Description is sent only when non-empty: it is not part of the documented
+	// post_info for a video (the documented text field is Title), so an empty
+	// one must not end up on the wire.
+	Description           string
+	VideoUrl              string
+	PrivacyLevel          string
+	DisableDuet           bool
+	DisableComment        bool
+	DisableStitch         bool
+	VideoCoverTimestampMS int64
+}
+
+// PhotoPost describes a photo post for PostPhoto. The zero value posts with
+// comments enabled, no auto-added music and cover index 0; PostPhotoInit keeps
+// its historical defaults (music on, cover index 1) instead.
+type PhotoPost struct {
+	Title           string
+	Description     string
+	PrivacyLevel    string
+	PhotoUrls       []string
+	PostMode        string
+	DisableComment  bool
+	AutoAddMusic    bool
+	PhotoCoverIndex int
 }

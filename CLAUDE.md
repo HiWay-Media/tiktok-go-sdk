@@ -34,7 +34,7 @@ go run ./cmd/backlog-sync -dry-run # anteprima del sync BACKLOG.md → issue/mil
 - `tiktok/resty.go` — trasporto: `restyPost`, `restyPostFormUrlEncoded`, `restyPostWithQueryParams`, `restyGet` (auth `Bearer` + header JSON) e `debugPrint`. Ogni endpoint nuovo passa da qui, non crea client suoi.
 - `tiktok/constants.go` — path relativi `/v2/...` (quelli usati dai metodi) + costanti `API_*` con URL assoluto, tenute solo per compatibilità.
 - `tiktok/oauth2.go` — `Endpoint` OAuth2 TikTok + `GetClientAccessTokenManagement` (grant `client_credentials`, per Research/Commercial). Il flusso **utente** (authorization_code + refresh) non c'è ancora: M2.
-- `tiktok/content.go` — Content Posting: `CreatorInfo`, `PostVideoInit`, `PublishVideo` (status fetch), `PostPhotoInit`, `GetVideoList`.
+- `tiktok/content.go` — Content Posting: `CreatorInfo`, `PostVideo`/`PostVideoInit`, `PublishVideo` (status fetch), `PostPhoto`/`PostPhotoInit`, `GetVideoList`. Le forme `*Init` sono le firme posizionali storiche: delegano a quelle con lo struct, tenendo i default di allora.
 - `tiktok/user.go` — `UserInfo` (`/v2/user/info/`).
 - `tiktok/commercial.go` — Research/Commercial Content API (`ResearchAdQuery`, incompleto — vedi trappole).
 - `tiktok/apierror.go` — `APIError` (errore tipizzato, `errors.As`) e `checkResponse`, l'unico punto che decide se una risposta TikTok è un fallimento.

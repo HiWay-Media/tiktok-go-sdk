@@ -10,6 +10,11 @@ var (
 	// ErrPostMode is returned when the post mode is neither DIRECT_POST nor
 	// MEDIA_UPLOAD (see CheckPostMode).
 	ErrPostMode = errors.New("tiktok: post mode is not valid")
+	// ErrPhotoUrlsRequired is returned when a photo post carries no image, and
+	// ErrVideoUrlRequired when a PULL_FROM_URL video post carries no URL: both
+	// are refused by TikTok, so the SDK does not spend a round trip on them.
+	ErrPhotoUrlsRequired = errors.New("tiktok: at least one photo URL is required")
+	ErrVideoUrlRequired  = errors.New("tiktok: video URL is required")
 	// ErrClientKeyRequired and ErrClientSecretRequired are returned by
 	// NewTikTok: every TikTok endpoint refuses a request from an app it cannot
 	// identify, so failing at construction beats failing later with an opaque

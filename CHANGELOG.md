@@ -2,6 +2,13 @@
 
 Le versioni seguono i tag `vX.Y.Z` del repository. Pre-1.0: `minor` per novità (anche breaking, se annotate), `patch` per fix.
 
+## 0.7.0
+
+- Content Posting (TT-30, M6): le scelte tornano a chi chiama. Nuovi **`PostVideo(VideoPost)`** e **`PostPhoto(PhotoPost)`** (entrambi in `ITiktok`), che espongono tutte le opzioni documentate: `video_cover_timestamp_ms` — che era già nello struct di richiesta ma **nessuna firma poteva valorizzare**, quindi era codice morto — e `disable_comment`, `auto_add_music`, `photo_cover_index`, finora **hardcoded** a `false`/`true`/`1` dentro `PostPhotoInit` senza modo di cambiarli.
+- Back-compat: `PostVideoInit` e `PostPhotoInit` restano e delegano ai nuovi metodi **con i default storici**, fissati da un test dedicato — chi non ha mai scelto quei valori non deve accorgersi di questa release. Le firme posizionali non vengono toccate: sono API pubblica.
+- `description` nel post_info **video** diventa `omitempty`: non è un campo documentato per il video init (il campo testuale documentato è `title`), quindi una stringa vuota non finisce più sul filo. `PhotoPost` mantiene invece la sua `description`, che lì è documentata.
+- Validazione anticipata: un post senza media fallisce **prima** della chiamata HTTP con `ErrPhotoUrlsRequired` o `ErrVideoUrlRequired`. TikTok lo rifiuterebbe comunque; farlo qui costa un round trip in meno e dice cosa manca davvero.
+
 ## 0.6.0
 
 - Modelli (TT-28, M6): corretti i typo nei campi esportati **senza rompere chi li usa**. `DataPublishVideo.PublishId` e `PublishStatusFetch.PubliclyAvailablePostId` sono i nomi giusti; `PubblishId` e `PublicalyAvailablePostId` restano come campi **deprecati ma popolati**. Non sono alias con lo stesso tag JSON perché non possono esserlo: due campi che dichiarano lo stesso tag entrano in conflitto e `encoding/json` **scarta entrambi**, quindi il "fix" avrebbe svuotato anche il campo vecchio. Sono riempiti da un `UnmarshalJSON` dedicato.
