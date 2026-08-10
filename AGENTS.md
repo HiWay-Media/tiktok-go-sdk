@@ -25,6 +25,7 @@ Questo file definisce le regole operative per gli agent (Copilot, Claude, altri 
 
 - Import path: `github.com/HiWay-Media/tiktok-go-sdk/tiktok` (sottodirectory, non la radice del modulo).
 - Un metodo nuovo va aggiunto a `ITiktok` in `tiktok/tiktok.go`, altrimenti e' irraggiungibile (vedi `ResearchAdQuery`, incompleto: fuori interfaccia e ignora l'errore).
+- **TikTok risponde HTTP 200 anche sugli errori** (esito nel body): ogni metodo deve passare da `checkResponse(resp, "<operazione>")`, mai dal solo `resp.IsError()`.
 - `debugPrint` stampa gli oggetti interi, **access token compreso**: `isDebug=true` solo in locale.
 - Nomi esportati SCREAMING_SNAKE (`BASE_URL`, `PUBLIC_TO_EVERYONE`, ...) sono API pubblica: rinominare solo con alias deprecati.
 - I metodi usano i **path relativi**, mai le `API_*` assolute: con un URL assoluto resty ignora la base URL e il test sfugge alla rete vera. Ogni endpoint nuovo va aggiunto a `TestEndpointsUseTheBaseURL`.

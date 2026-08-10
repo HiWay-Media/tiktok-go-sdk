@@ -2,7 +2,6 @@ package tiktok
 
 import (
 	"encoding/json"
-	"fmt"
 
 	"golang.org/x/oauth2"
 )
@@ -35,8 +34,8 @@ func (o *tiktok) GetClientAccessTokenManagement() (*AccessTokenManagement, error
 	if err != nil {
 		return nil, err
 	}
-	if resp.IsError() {
-		return nil, fmt.Errorf("client access token management error %s", resp.String())
+	if err := checkResponse(resp, "client access token"); err != nil {
+		return nil, err
 	}
 	//
 	var obj AccessTokenManagement

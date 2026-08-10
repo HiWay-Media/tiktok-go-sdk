@@ -2,7 +2,6 @@ package tiktok
 
 import (
 	"encoding/json"
-	"fmt"
 )
 
 /*
@@ -20,8 +19,8 @@ func (o *tiktok) CreatorInfo() (*QueryCreatorInfoResponse, error) {
 	if err != nil {
 		return nil, err
 	}
-	if resp.IsError() {
-		return nil, fmt.Errorf("creator info error %s", resp.String())
+	if err := checkResponse(resp, "creator info"); err != nil {
+		return nil, err
 	}
 	var obj QueryCreatorInfoResponse
 	if err := json.Unmarshal(resp.Body(), &obj); err != nil {
@@ -63,7 +62,7 @@ curl --location 'https://open.tiktokapis.com/v2/post/publish/video/init/' \
 */
 func (o *tiktok) PostVideoInit(title, description, videoUrl string, privacyLevel string, disableDuet, disableComment, disableStitch bool) (*PublishVideoResponse, error) {
 	if !CheckPrivacyLevel(privacyLevel) {
-		return nil, PrivacyLevelWrong
+		return nil, ErrPrivacyLevel
 	}
 	//
 	request := &PublishVideoRequest{
@@ -84,8 +83,8 @@ func (o *tiktok) PostVideoInit(title, description, videoUrl string, privacyLevel
 	if err != nil {
 		return nil, err
 	}
-	if resp.IsError() {
-		return nil, fmt.Errorf("post video init error %s", resp.String())
+	if err := checkResponse(resp, "post video init"); err != nil {
+		return nil, err
 	}
 	var obj PublishVideoResponse
 	if err := json.Unmarshal(resp.Body(), &obj); err != nil {
@@ -119,8 +118,8 @@ func (o *tiktok) PublishVideo(publishId string) (*PublishStatusFetchResponse, er
 	if err != nil {
 		return nil, err
 	}
-	if resp.IsError() {
-		return nil, fmt.Errorf("publis video error %s", resp.String())
+	if err := checkResponse(resp, "publish status fetch"); err != nil {
+		return nil, err
 	}
 	var obj PublishStatusFetchResponse
 	if err := json.Unmarshal(resp.Body(), &obj); err != nil {
@@ -156,10 +155,10 @@ curl --location 'https://open.tiktokapis.com/v2/post/publish/content/init/' \
 
 func (o *tiktok) PostPhotoInit(title, description, privacyLevel string, photoUrls []string, photoMode string) (*PublishStatusFetchResponse, error) {
 	if !CheckPrivacyLevel(privacyLevel) {
-		return nil, PrivacyLevelWrong
+		return nil, ErrPrivacyLevel
 	}
 	if !CheckPostMode(photoMode) {
-		return nil, PhotoModeWrong
+		return nil, ErrPostMode
 	}
 	request := &PublishPhotoRequest{
 		PostInfo: PostPhotoInfo{
@@ -180,8 +179,8 @@ func (o *tiktok) PostPhotoInit(title, description, privacyLevel string, photoUrl
 	if err != nil {
 		return nil, err
 	}
-	if resp.IsError() {
-		return nil, fmt.Errorf("post video init error %s", resp.String())
+	if err := checkResponse(resp, "post photo init"); err != nil {
+		return nil, err
 	}
 	var obj PublishStatusFetchResponse
 	if err := json.Unmarshal(resp.Body(), &obj); err != nil {
@@ -214,8 +213,8 @@ func (o *tiktok) GetVideoList(count int64) (*VideoListResponse, error) {
 	if err != nil {
 		return nil, err
 	}
-	if resp.IsError() {
-		return nil, fmt.Errorf("post video init error %s", resp.String())
+	if err := checkResponse(resp, "video list"); err != nil {
+		return nil, err
 	}
 	var obj VideoListResponse
 	if err := json.Unmarshal(resp.Body(), &obj); err != nil {

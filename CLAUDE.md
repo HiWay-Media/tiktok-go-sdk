@@ -37,7 +37,8 @@ go run ./cmd/backlog-sync -dry-run # anteprima del sync BACKLOG.md → issue/mil
 - `tiktok/content.go` — Content Posting: `CreatorInfo`, `PostVideoInit`, `PublishVideo` (status fetch), `PostPhotoInit`, `GetVideoList`.
 - `tiktok/user.go` — `UserInfo` (`/v2/user/info/`).
 - `tiktok/commercial.go` — Research/Commercial Content API (`ResearchAdQuery`, incompleto — vedi trappole).
-- `tiktok/model*.go`, `request_*.go` — struct di request/response con tag JSON; `ErrorObject` è la busta d'errore TikTok (oggi non tipizzata negli errori restituiti: M3).
+- `tiktok/apierror.go` — `APIError` (errore tipizzato, `errors.As`) e `checkResponse`, l'unico punto che decide se una risposta TikTok è un fallimento.
+- `tiktok/model*.go`, `request_*.go` — struct di request/response con tag JSON; `ErrorObject` (endpoint `/v2/...`) e `OAuthErrorObject` (token endpoint) sono le **due** buste d'errore.
 - `tiktok/privacy.go`, `post_mode.go` — enum stringa + `CheckPrivacyLevel`/`CheckPostMode`, validazione **prima** della chiamata HTTP.
 - `internal/backlog/`, `cmd/backlog-sync/` — tooling: parsing di `BACKLOG.md` e sync con issue/milestone GitHub. `internal/` = non importabile da fuori, non è API pubblica.
 - `test/` — package `test` separato, consuma l'SDK come farebbe un utente: `newClient(t)` con credenziali placeholder per i test offline, `GetTikTok(t)` da env (con skip) per quelli dietro il tag `integration`.
@@ -48,6 +49,7 @@ go run ./cmd/backlog-sync -dry-run # anteprima del sync BACKLOG.md → issue/mil
 - **`debugPrint` stampa gli oggetti interi**, incluso l'`AccessTokenManagement` con il token in chiaro: `isDebug=true` è per lo sviluppo locale, mai in CI, mai in produzione, mai incollato in una issue.
 - **I nomi esportati in SCREAMING_SNAKE** (`BASE_URL`, `API_USER_INFO`, `PUBLIC_TO_EVERYONE`, `DIRECT_POST`) non sono idiomatici ma **sono API pubblica**: rinominarli rompe chi importa. Eventuale rinomina = nuovi nomi + vecchi mantenuti come alias deprecati, mai una sostituzione secca.
 - **I metodi usano i path relativi** (`QUERY_CREATOR_INFO`, `USER_INFO`, `OAUTH_TOKEN`, …), mai le `API_*` assolute: resty ignora la base URL se riceve un URL assoluto, quindi una `API_*` in un metodo nuovo **fa sfuggire i test alla rete reale**. Le `API_*` restano esportate solo per compatibilità. `TestEndpointsUseTheBaseURL` in `tiktok/tiktok_test.go` è il guardrail: aggiungi lì ogni endpoint nuovo.
+- **TikTok risponde `HTTP 200` anche quando rifiuta la richiesta**, mettendo l'esito nel body: guardare solo `resp.IsError()` fa passare un fallimento per un successo. Ogni metodo **deve** chiamare `checkResponse(resp, "<operazione>")` prima di deserializzare — è il bug che ha motivato M6.
 - **`ResearchAdQuery` è incompleto**: non è in `ITiktok`, ignora l'errore e non ritorna nulla. Non usarlo come modello per un endpoint nuovo (tracked in `BACKLOG.md`).
 - **Le chiamate reali all'API stanno dietro `//go:build integration`** (`go test -tags integration ./test/`): `go test ./...` non tocca la rete. Le credenziali mancanti fanno `t.Skip`, non `t.Fatal`. Ogni test nuovo usa `httptest` + `WithBaseURL`.
 - **Dipendenze: solo `go-resty/resty/v2` e `golang.org/x/oauth2`.** Aggiungerne altre solo con forte motivazione — un SDK con tante dipendenze è un peso per chi lo importa.

@@ -2,7 +2,6 @@ package tiktok
 
 import (
 	"encoding/json"
-	"fmt"
 )
 
 /*
@@ -21,8 +20,8 @@ func (o *tiktok) UserInfo() (*UserInfoResponse, error) {
 	if err != nil {
 		return nil, err
 	}
-	if resp.IsError() {
-		return nil, fmt.Errorf("creator info error %s", resp.String())
+	if err := checkResponse(resp, "user info"); err != nil {
+		return nil, err
 	}
 	var obj UserInfoResponse
 	if err := json.Unmarshal(resp.Body(), &obj); err != nil {
